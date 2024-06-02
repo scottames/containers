@@ -10,9 +10,10 @@ atomic-ublue-silverblue *FLAGS='container':
     --tag      40 \
     --variant  silverblue \
     --suffix   main \
+    --source   . \
     {{FLAGS}}
 
-atomic-ublue-silverblue-publish:
+atomic-ublue-silverblue-publish-and-sign:
   dagger call -m atomic \
     --registry ghcr.io \
     --org      ublue-os \
@@ -20,12 +21,18 @@ atomic-ublue-silverblue-publish:
     --variant  silverblue \
     --suffix   main \
     --source . \
-  publish \
-		--registry=ghcr.io \
-		--image-name=atomic-silverblue \
-		--username=$GITHUB_USERNAME \
-		--secret=$GITHUB_TOKEN \
-		--tag=test
+    publish \
+  		--registry="ghcr.io/scottames" \
+  		--image-name=atomic-silverblue \
+  		--username=$GITHUB_USERNAME \
+  		--secret=env:GITHUB_TOKEN \
+  		--tags=test1,test2 \
+    sign \
+      --private-key=env:COSIGN_PRIVATE_KEY \
+      --password=env:COSIGN_PASSWORD \
+      --registry-username=$GITHUB_USERNAME \
+      --registry-password=env:GITHUB_TOKEN
+
 
 
 dagger-fedora *FLAGS='container':

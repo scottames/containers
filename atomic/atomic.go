@@ -39,7 +39,7 @@ var (
 		"mozilla-fira-fonts-common",
 		"mozilla-fira-mono-fonts",
 		"mscore-fonts-all",
-		"mullvad-vpn",
+		// "mullvad-vpn",
 		"netcat",
 		"open-sans-fonts",
 		"pam-u2f",
@@ -61,20 +61,20 @@ var (
 		"yubikey-manager-qt",
 
 		// Virt-manager packages from bluefin-dx
-		"edk2-ovmf",
-		"genisoimage",
-		"libvirt",
-		"qemu",
-		"qemu-char-spice",
-		"qemu-device-display-virtio-gpu",
-		"qemu-device-display-virtio-vga",
-		"qemu-device-usb-redirect",
-		"qemu-img",
-		"qemu-system-x86-core",
-		"qemu-user-binfmt",
-		"qemu-user-static",
-		"virt-manager",
-		"virt-viewer",
+		// "edk2-ovmf",
+		// "genisoimage",
+		// "libvirt",
+		// "qemu",
+		// "qemu-char-spice",
+		// "qemu-device-display-virtio-gpu",
+		// "qemu-device-display-virtio-vga",
+		// "qemu-device-usb-redirect",
+		// "qemu-img",
+		// "qemu-system-x86-core",
+		// "qemu-user-binfmt",
+		// "qemu-user-static",
+		// "virt-manager",
+		// "virt-viewer",
 		// Required for ZSA voyager
 		"gtk3",
 		"libusb",
@@ -91,7 +91,7 @@ var (
 	scriptsPostPackageInstall = []string{
 		"1Password.sh",
 		// TODO: variables in signing script won't work as-is
-		"signing.sh",
+		// "signing.sh",
 		// "vivaldi.sh", // layering for now...
 		"wezterm.sh",
 	}
@@ -108,8 +108,18 @@ func (a *Atomic) fedoraAtomic() *Fedora {
 		))
 	}
 
+	opts := FedoraOpts{
+		Registry: a.Registry,
+		Org:      a.Org,
+		Tag:      a.Tag,
+		Variant:  a.Variant,
+	}
+	if a.Suffix != nil {
+		opts.Suffix = *a.Suffix
+	}
+
 	// Fedora is derived from the installed dagger module dependency
-	return a.Fedora.
+	return dag.Fedora(opts).
 		WithDescription(description).
 		WithLabel(FedoraWithLabelOpts{
 			Name: "io.artifacthub.package.readme-url",
@@ -122,6 +132,7 @@ func (a *Atomic) fedoraAtomic() *Fedora {
 		WithRepos(reposForBuild, false). // false => delete repo file in final image
 		WithPackagesInstalled(packagesInstalled).
 		WithPackagesRemoved(packagesRemoved).
-		WithExecScripts(scriptsPost, false).         // false => post package install
-		WithExec([]string{"update-ca-trust"}, false) // false => post package install
+		WithExecScripts(scriptsPost, false).          // false => post package install
+		WithExec([]string{"update-ca-trust"}, false). // false => post package install
+		WithExec([]string{"ostree", "container", "commit"}, false)
 }

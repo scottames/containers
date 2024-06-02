@@ -38,26 +38,25 @@ func New(
 	// referenced by Atomic.fedoraAtomic to determine the path to local files
 	source *Directory,
 ) *Atomic {
-	opts := FedoraOpts{
+	return &Atomic{
+		Source:   source,
 		Registry: registry,
 		Org:      org,
 		Tag:      tag,
 		Variant:  variant,
-	}
-	if suffix != nil {
-		opts.Suffix = *suffix
-	}
-
-	return &Atomic{
-		Fedora: dag.
-			Fedora(opts),
+		Suffix:   suffix,
 	}
 }
 
 // TODO: docs
 type Atomic struct {
-	Fedora *Fedora
-	Source *Directory
+	Source   *Directory
+	Registry string
+	Org      string
+	Tag      string
+	Variant  string
+	Suffix   *string
+	Digests  []string
 }
 
 // TODO:
@@ -83,15 +82,15 @@ func (a *Atomic) Publish(
 	registry string,
 	// name of the image
 	imageName string,
-	// the tag to publish to
-	tag string,
+	// the tag(s) to publish to
+	tags []string,
 	// registry auth username
 	// +optional
 	username *string,
 	// registry auth password/secret
 	// +optional
 	secret *Secret,
-) (string, error) {
+) (*Atomic, error) {
 	var publishOpts FedoraPublishOpts
 	if username != nil || secret != nil {
 		publishOpts = FedoraPublishOpts{
@@ -100,7 +99,77 @@ func (a *Atomic) Publish(
 		}
 	}
 
-	return a.
+	digests, err := a.
 		fedoraAtomic().
-		Publish(ctx, registry, imageName, tag, publishOpts)
+		Publish(ctx, registry, imageName, tags, publishOpts)
+	if err != nil {
+		return nil, err
+	}
+
+	a.Digests = append(a.Digests, digests...)
+
+	return a, nil
+}
+
+// TODO: docs
+func (a *Atomic) Sign(
+	ctx context.Context,
+	// Cosign private key
+	privateKey Secret,
+	// Cosign password
+	password Secret,
+	// Docker image digest
+	//+optional
+	digest *string,
+	// registry username
+	//+optional
+	registryUsername *string,
+	// name of the image
+	//+optional
+	registryPassword *Secret,
+	// Docker config
+	//+optional
+	dockerConfig *File,
+	// Cosign container image
+	//+optional
+	//+default="chainguard/cosign:latest"
+	cosignImage *string,
+	// Cosign container image user
+	//+optional
+	//+default="nonroot"
+	cosignUser *string,
+) ([]string, error) {
+	ds := a.Digests
+	if digest != nil {
+		ds = []string{*digest}
+	}
+
+	opts := FedoraSignOpts{
+		CosignImage: *cosignImage,
+		CosignUser:  *cosignUser,
+	}
+	if registryUsername != nil && registryPassword != nil {
+		opts.RegistryUsername = *registryUsername
+		opts.RegistryPassword = registryPassword
+	}
+	if dockerConfig != nil {
+		opts.DockerConfig = dockerConfig
+	}
+
+	stdouts := []string{}
+	for _, d := range ds {
+		opts.Digest = d
+		var err error
+		stdouts, err = dag.Fedora().Sign(
+			ctx,
+			&privateKey,
+			&password,
+			opts,
+		)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return stdouts, nil
 }

@@ -74,6 +74,7 @@ type Fedora struct {
 	Suffix   *string
 	Tag      string
 	Variant  string
+	Digests  []string
 
 	Directories       []*DirectoryFromSource
 	Files             []*FileFromSource

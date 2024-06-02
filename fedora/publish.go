@@ -30,15 +30,15 @@ func (f *Fedora) Publish(
 	registry string,
 	// name of the image
 	imageName string,
-	// the tag to publish to
-	tag string,
+	// the tag(s) to publish to
+	tags []string,
 	// registry auth username
 	// +optional
 	username *string,
 	// registry auth password/secret
 	// +optional
 	secret *Secret,
-) (string, error) {
+) ([]string, error) {
 	suffix := ""
 	if f.Suffix != nil {
 		suffix = fmt.Sprintf("-%s", *f.Suffix)
@@ -57,7 +57,7 @@ func (f *Fedora) Publish(
 			),
 		)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	if username != nil && secret != nil {
@@ -72,7 +72,6 @@ func (f *Fedora) Publish(
 	//
 	// TODO: do this with https://github.com/docker/metadata-action?tab=readme-ov-file#outputs or here?
 	// "org.opencontainers.image.created": "2024-06-01T15:07:50.585Z",
-	// "org.opencontainers.image.description": "A base Universal Blue silverblue image with batteries included",
 	// "org.opencontainers.image.licenses": "Apache-2.0",
 	// "org.opencontainers.image.revision": "c8d9b00faefec18b2476b10de1be46f496524023",
 	// "org.opencontainers.image.source": "https://github.com/ublue-os/main",
@@ -80,13 +79,16 @@ func (f *Fedora) Publish(
 	// "org.opencontainers.image.url": "https://github.com/ublue-os/main",
 	// "org.opencontainers.image.version": "40.20240601.0",
 
-	image, err := ctr.Publish(
-		ctx,
-		fmt.Sprintf("%s/%s:%s", registry, imageName, tag),
-	)
-	if err != nil {
-		return "", err
+	for _, tag := range tags {
+		digest, err := ctr.Publish(
+			ctx,
+			fmt.Sprintf("%s/%s:%s", registry, imageName, tag),
+		)
+		if err != nil {
+			return nil, err
+		}
+		f.Digests = append(f.Digests, digest)
 	}
 
-	return image, nil
+	return f.Digests, nil
 }
