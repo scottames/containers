@@ -1,0 +1,98 @@
+---
+name: atomic-build-and-publish
+on: # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows
+  schedule:
+    - cron: 30 23 * * * # 16:30 PST
+  push:
+    branches:
+      - live
+      - template
+      - main
+    paths-ignore: # don't rebuild if only documentation has changed
+      - "**.md"
+  # yamllint disable-line rule:empty-values
+  pull_request:
+  # yamllint disable-line rule:empty-values
+  workflow_dispatch:
+jobs:
+  build_push:
+    name: Build and Publish Atomic Fedora
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    strategy:
+      fail-fast: false
+      matrix:
+        org: [ublue-os]
+        registry: [ghcr.io]
+        variant: [silverblue]
+        suffix:
+          - main
+          # FIXME: - nvidia
+        version:
+          # FIXME: - "39"
+          - "40"
+    env:
+      IMAGE_NAME: atomic-${{ matrix.variant }}-${{ matrix.suffix }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: GitHub SHA Short
+        id: sha_short
+        run: echo "sha_short=${GITHUB_SHA::7}" >> "${GITHUB_OUTPUT}"
+      - name: Docker Image Metadata From GitHub Repository
+        uses: docker/metadata-action@v5
+        id: generate_labels
+        with:
+          images: |
+            ${{ env.IMAGE_NAME }}
+      # - name: Dagger Eval Container
+      #   uses: dagger/dagger-for-github@v5
+      #   if: github.event_name == 'pull_request'
+      #   with:
+      #     # renovate: datasource=github-releases depName=dagger/dagger
+      #     version: v0.11.6
+      #     module: atomic
+      #     args: --source=. --registry="${{ matrix.registry }}" --org="${{ matrix.org }}" --variant="${{ matrix.variant }}" --suffix="${{ matrix.suffix }}" --tag="${{ matrix.version }}" --labels="$(printf "${{ steps.generate_labels.outputs.labels }}" | xargs echo -n | tr -s '\n[:space:]' ',' )" container
+      - name: Dagger Publish (PR)
+        uses: dagger/dagger-for-github@v5
+        env:
+          COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+          COSIGN_PUBLIC_KEY: ${{ secrets.COSIGN_PUBLIC_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
+        if: |
+          github.event_name == 'pull_request'
+          && github.ref != 'refs/heads/main'
+        with:
+          # renovate: datasource=github-releases depName=dagger/dagger
+          version: v0.11.6
+          verb: call
+          module: atomic
+          # the labels transformation step below (xargs echo -n | tr -s '\n[:space:]' ',')
+          #   changes the separator from newlines into comma
+          args: --source=.  --registry="${{ matrix.registry }}"  --org="${{ matrix.org }}"  --variant="${{ matrix.variant }}"  --suffix="${{ matrix.suffix }}"  --tag="${{ matrix.version }}"  --additional-labels="$(printf "${{ steps.generate_labels.outputs.labels }}" | xargs echo -n | tr -s '\n[:space:]' ',' )"  publish-and-sign  --registry="ghcr.io"  --image-name="${{ env.IMAGE_NAME }}"  --username="${{ github.actor }}"  --secret=env:GITHUB_TOKEN  --additional-tags="${{ steps.sha_short.outputs.sha_short }}-${{ matrix.version}},pr-${{ github.event.number }}-${{ matrix.version}}" --skip-default-tags --cosign-private-key=env:COSIGN_PRIVATE_KEY  --cosign-password=env:COSIGN_PASSWORD
+          # TODO:
+          # cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
+      - name: Dagger Publish (main)
+        uses: dagger/dagger-for-github@v5
+        env:
+          COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+          COSIGN_PUBLIC_KEY: ${{ secrets.COSIGN_PUBLIC_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
+        if: |
+          github.event_name != 'pull_request'
+          && github.ref == 'refs/heads/main'
+        with:
+          # renovate: datasource=github-releases depName=dagger/dagger
+          version: v0.11.6
+          verb: call
+          module: atomic
+          # the labels transformation step below (xargs echo -n | tr -s '\n[:space:]' ',')
+          #   changes the separator from newlines into comma
+          args: --source=.  --registry="${{ matrix.registry }}"  --org="${{ matrix.org }}"  --variant="${{ matrix.variant }}"  --suffix="${{ matrix.suffix }}"  --tag="${{ matrix.version }}"  --additional-labels="$(printf "${{ steps.generate_labels.outputs.labels }}" | xargs echo -n | tr -s '\n[:space:]' ',' )"  publish-and-sign  --registry="ghcr.io"  --image-name="${{ env.IMAGE_NAME }}"  --username="${{ github.actor }}"  --secret=env:GITHUB_TOKEN  --cosign-private-key=env:COSIGN_PRIVATE_KEY  --cosign-password=env:COSIGN_PASSWORD
+          # TODO:
+          # cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}

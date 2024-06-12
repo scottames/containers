@@ -1,0 +1,12 @@
+{
+  "name": "toolbox-fedora",
+  "sdk": "go",
+  "dependencies": [
+    {
+      "name": "fedora",
+      "source": "../fedora"
+    }
+  ],
+  "source": ".",
+  "engineVersion": "v0.11.6"
+}

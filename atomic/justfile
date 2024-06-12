@@ -1,0 +1,66 @@
+tagFedoraLatest := "40" # TODO: renovate
+labels := ""
+tags := "test"
+
+# evaluate an atomic container
+atomic-container registry="ghcr.io" org="ublue-os" variant="silverblue" suffix="main":
+  dagger \
+    --progress=plain \
+    call \
+    -m atomic \
+      --registry "{{ registry }}" \
+      --org      "{{ org }}" \
+      --tag      "{{ tagFedoraLatest }}" \
+      --variant  "{{ variant }}" \
+      --suffix   "{{ suffix }}" \
+      --labels="$(printf "{{ labels }}" | sed -n -e 'H;${x;s/\n/,/g;s/^,//;p;}' )" \
+      --source   . \
+      container
+
+# publish (w/o sign) atomic image
+atomic-publish registry="ghcr.io" org="ublue-os" variant="silverblue" suffix="main" name="atomic-silverblue-main" skip-registry-namespace="false":
+  dagger call \
+    --progress=plain \
+    -m atomic \
+      --registry "{{ registry }}" \
+      --org      "{{ org }}" \
+      --tag      "{{ tagFedoraLatest }}" \
+      --variant  "{{ variant }}" \
+      --suffix   "{{ suffix }}" \
+      --additional-labels="$(printf "{{ labels }}" | sed -n -e 'H;${x;s/\n/,/g;s/^,//;p;}' )" \
+      --source   . \
+    publish \
+      --registry="{{ registry }}" \
+      --image-name="{{ name }}" \
+      --username=$GITHUB_USERNAME \
+      --secret=env:GITHUB_TOKEN \
+      --additional-tags="$(printf "{{ tags }}" | sed -n -e 'H;${x;s/\n/,/g;s/^,//;p;}' )" \
+      --skip-registry-namespace={{ skip-registry-namespace }}
+
+#   - set labels & tags from the commandline to override (tags="foo,bar")
+#   - requires the following env:
+#     - GITHUB_USERNAME
+#     - GITHUB_TOKEN
+#     - COSIGN_PASSWORD
+#     - COSIGN_PRIVATE_KEY
+# publish and sign atomic image
+atomic-publish-and-sign registry="ghcr.io" org="ublue-os" variant="silverblue" suffix="main" name="atomic-silverblue-main" skip-registry-namespace="false":
+  dagger \
+    --progress=plain \
+    call \
+    -m atomic \
+      --registry "{{ registry }}" \
+      --org      "{{ org }}" \
+      --tag      "{{ tagFedoraLatest }}" \
+      --variant  "{{ variant }}" \
+      --suffix   "{{ suffix }}" \
+      --additional-labels="$(printf "{{ labels }}" | sed -n -e 'H;${x;s/\n/,/g;s/^,//;p;}' )" \
+      --source   . \
+    publish-and-sign \
+      --registry=ghcr.io \
+      --image-name="{{ name }}" \
+      --username=$GITHUB_USERNAME \
+      --secret=env:GITHUB_TOKEN \
+      --additional-tags="$(printf "{{ tags }}" | sed -n -e 'H;${x;s/\n/,/g;s/^,//;p;}' )" \
+      --cosign-private-key=env:COSIGN_PRIVATE_KEY \
+      --cosign-password=env:COSIGN_PASSWORD

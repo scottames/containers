@@ -1,0 +1,16 @@
+{
+  "name": "atomic",
+  "sdk": "go",
+  "dependencies": [
+    {
+      "name": "fedora",
+      "source": "../fedora"
+    },
+    {
+      "name": "cosign",
+      "source": "../cosign"
+    }
+  ],
+  "source": ".",
+  "engineVersion": "v0.11.6"
+}
