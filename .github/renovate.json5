@@ -1,0 +1,60 @@
+{
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+  configMigration: true,
+  extends: [
+    'config:recommended',
+    'config:recommended',
+    'config:best-practices',
+    ':semanticCommitTypeAll(chore)',
+    ':preserveSemverRanges',
+    'mergeConfidence:all-badges',
+    'github>aquaproj/aqua-renovate-config#2.3.1', // renovate: depName=aquaproj/aqua-renovate-config
+  ],
+  automergeStrategy: 'squash',
+  dependencyDashboard: true,
+  labels: [
+    'dependencies',
+  ],
+  platformAutomerge: true,
+  pruneStaleBranches: true,
+  rebaseWhen: 'behind-base-branch',
+  schedule: 'after 4pm on thursday',
+  timezone: 'America/Los_Angeles',
+  semanticCommitScope: 'deps',
+  semanticCommitType: 'chore',
+  semanticCommits: 'enabled',
+  postUpdateOptions: [
+    'gomodTidy',
+    'gomodUpdateImportPaths',
+  ],
+  gomod: {
+    enabled: true,
+    commitMessageTopic: '⇡ golang module {{depName}}',
+  },
+  vulnerabilityAlerts: {
+    enabled: true,
+    labels: [
+      'security',
+    ],
+  },
+  customManagers: [
+    {
+      customType: 'regex',
+      fileMatch: [
+        '\\.github\\/.+\\.yaml$',
+      ],
+      matchStrings: [
+        "renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)\\s*.*[vV][eE][rR][sS][iI][oO][nN]: +['\"]?(?<currentValue>[^'\" \\n]+)['\"]?$",
+      ],
+    },
+    {
+      customType: 'regex',
+      fileMatch: [
+        'justfile',
+      ],
+      matchStrings: [
+        "renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)\\s*.*[vV][eE][rR][sS][iI][oO][nN] := +['\"]?(?<currentValue>[^'\" \\n]+)['\"]?$"
+      ]
+    }
+  ],
+}
