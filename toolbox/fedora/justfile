@@ -1,0 +1,31 @@
+# evaluate the container
+[no-exit-message]
+fedora-toolbox-container :
+  dagger \
+    --progress={{ progress }} \
+    call \
+    -m toolbox/fedora \
+      container {{ args }}
+
+#   - set labels & tags from the commandline to override (tags="foo,bar")
+#   - requires the following env:
+#     - GITHUB_USERNAME
+#     - GITHUB_TOKEN
+#     - COSIGN_PASSWORD
+#     - COSIGN_PRIVATE_KEY
+# publish and sign atomic image
+fedora-toolbox-publish-and-sign  name="fedora-toolbox" skip-registry-namespace="false":
+  dagger \
+    --progress={{ progress }} \
+    call \
+    -m toolbox/fedora \
+    publish-and-sign \
+      --registry=ghcr.io \
+      --image-name="{{ name }}" \
+      --skip-default-tags \
+      --username=$GITHUB_USERNAME \
+      --secret=env:GITHUB_TOKEN \
+      --additional-tags="$(printf "{{ tags }}" | sed -n -e 'H;${x;s/\n/,/g;s/^,//;p;}' )" \
+      --skip-registry-namespace={{ skip-registry-namespace }} \
+      --cosign-private-key=env:COSIGN_PRIVATE_KEY \
+      --cosign-password=env:COSIGN_PASSWORD

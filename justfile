@@ -37,3 +37,4 @@ install target module:
   popd
 
 import 'atomic/justfile'
+import 'toolbox/fedora/justfile'

@@ -1,0 +1,77 @@
+---
+name: build-and-publish-toolboxes
+on:
+  workflow_call:
+    inputs:
+      module:
+        description: Dagger module to use to build the container image
+        required: true
+        type: string
+      image_name:
+        description: Name of the output image
+        required: true
+        type: string
+      version:
+        description: The container image version
+        required: true
+        type: string
+jobs:
+  build_and_publish:
+    name: Build and Publish Toolbox Image(s)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    strategy:
+      fail-fast: false
+    env:
+      IMAGE_NAME: ${{ inputs.image_name }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: GitHub SHA Short
+        id: sha_short
+        run: echo "sha_short=${GITHUB_SHA::7}" >> "${GITHUB_OUTPUT}"
+      - name: Docker Image Metadata From GitHub Repository
+        uses: docker/metadata-action@v5
+        id: generate_labels
+        with:
+          images: |
+            ${{ env.IMAGE_NAME }}
+      - name: Dagger Build and Publish (PR)
+        uses: dagger/dagger-for-github@v5
+        env:
+          COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+          COSIGN_PUBLIC_KEY: ${{ secrets.COSIGN_PUBLIC_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
+        if: |
+          github.event_name == 'pull_request'
+          && github.ref != 'refs/heads/main'
+        with:
+          # renovate: datasource=github-releases depName=dagger/dagger
+          version: v0.11.6
+          verb: call
+          module: ${{ inputs.module }}
+          args: publish-and-sign  --registry="ghcr.io"  --image-name="${{ env.IMAGE_NAME }}"  --username="${{ github.actor }}"  --secret=env:GITHUB_TOKEN  --additional-tags="pr-${{ github.event.number }}-${{ inputs.version}},pr-${{ github.event.number }}-${{ inputs.version}}-${{ steps.sha_short.outputs.sha_short }}"  --skip-default-tags  --cosign-private-key=env:COSIGN_PRIVATE_KEY  --cosign-password=env:COSIGN_PASSWORD
+          # TODO:
+          # cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
+      - name: Dagger Build and Publish (main)
+        uses: dagger/dagger-for-github@v5
+        env:
+          COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+          COSIGN_PUBLIC_KEY: ${{ secrets.COSIGN_PUBLIC_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
+        if: |
+          github.event_name != 'pull_request'
+          && github.ref == 'refs/heads/main'
+        with:
+          # renovate: datasource=github-releases depName=dagger/dagger
+          version: v0.11.6
+          verb: call
+          module: ${{ inputs.module }}
+          args: publish-and-sign  --registry="ghcr.io"  --image-name="${{ env.IMAGE_NAME }}"   --latest --username="${{ github.actor }}"  --secret=env:GITHUB_TOKEN  --cosign-private-key=env:COSIGN_PRIVATE_KEY  --cosign-password=env:COSIGN_PASSWORD
+          # TODO:
+          # cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
