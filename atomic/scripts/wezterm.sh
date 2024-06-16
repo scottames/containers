@@ -11,17 +11,23 @@ WEZTERM_FILENAME="wezterm-${WEZTERM_RELEASE_UNDERSCORE}-1.fedora${FEDORA_RELEASE
 TMP_DIR=$(mktemp -d)
 pushd "${TMP_DIR}"
 
-curl -fsSL -O \
-  "https://github.com/wez/wezterm/releases/download/${WEZTERM_RELEASE}/${WEZTERM_FILENAME}"
-
 if [[ "${FEDORA_RELEASE}" = "40" ]]; then
-  curl -fsSL -O \
-    "https://github.com/wez/wezterm/releases/download/nightly/wezterm-nightly-fedora${FEDORA_RELEASE}.rpm"
 
   WEZTERM_FILENAME="wezterm-nightly-fedora${FEDORA_RELEASE}.rpm"
+  curl -fsSL -O \
+    "https://github.com/wez/wezterm/releases/download/nightly/${WEZTERM_FILENAME}"
+
+  curl -fsSL -O \
+    "https://github.com/wez/wezterm/releases/download/nightly/${WEZTERM_FILENAME}.sha256"
+
 else
+
+  curl -fsSL -O \
+    "https://github.com/wez/wezterm/releases/download/${WEZTERM_RELEASE}/${WEZTERM_FILENAME}"
+
   curl -fsSL -O \
     "https://github.com/wez/wezterm/releases/download/${WEZTERM_RELEASE}/${WEZTERM_FILENAME}.sha256"
+
 fi
 
 sha256sum -c "${WEZTERM_FILENAME}.sha256"
