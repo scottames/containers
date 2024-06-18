@@ -3,12 +3,12 @@
   "sdk": "go",
   "dependencies": [
     {
-      "name": "fedora",
-      "source": "github.com/scottames/daggerverse/fedora@e04584e46ee2d626b2f09e90ba0b8ec3464650d2"
-    },
-    {
       "name": "cosign",
       "source": "github.com/scottames/daggerverse/cosign@e04584e46ee2d626b2f09e90ba0b8ec3464650d2"
+    },
+    {
+      "name": "fedora",
+      "source": "github.com/scottames/daggerverse/fedora@e04584e46ee2d626b2f09e90ba0b8ec3464650d2"
     }
   ],
   "source": ".",
