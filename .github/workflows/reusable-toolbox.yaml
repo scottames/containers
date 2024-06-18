@@ -51,7 +51,7 @@ jobs:
           && github.ref != 'refs/heads/main'
         with:
           # renovate: datasource=github-releases depName=dagger/dagger
-          version: v0.11.6
+          version: v0.11.7
           verb: call
           module: ${{ inputs.module }}
           args: publish-and-sign  --registry="ghcr.io"  --image-name="${{ env.IMAGE_NAME }}"  --username="${{ github.actor }}"  --secret=env:GITHUB_TOKEN  --additional-tags="pr-${{ github.event.number }}-${{ inputs.version}},pr-${{ github.event.number }}-${{ inputs.version}}-${{ steps.sha_short.outputs.sha_short }}"  --skip-default-tags  --cosign-private-key=env:COSIGN_PRIVATE_KEY  --cosign-password=env:COSIGN_PASSWORD
@@ -69,7 +69,7 @@ jobs:
           && github.ref == 'refs/heads/main'
         with:
           # renovate: datasource=github-releases depName=dagger/dagger
-          version: v0.11.6
+          version: v0.11.7
           verb: call
           module: ${{ inputs.module }}
           args: publish-and-sign  --registry="ghcr.io"  --image-name="${{ env.IMAGE_NAME }}"   --latest --username="${{ github.actor }}"  --secret=env:GITHUB_TOKEN  --cosign-private-key=env:COSIGN_PRIVATE_KEY  --cosign-password=env:COSIGN_PASSWORD

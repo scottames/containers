@@ -58,7 +58,7 @@ jobs:
           && github.ref != 'refs/heads/main'
         with:
           # renovate: datasource=github-releases depName=dagger/dagger
-          version: v0.11.6
+          version: v0.11.7
           verb: call
           module: atomic
           # the labels transformation step below (xargs -I {} echo -n \"{}\", | sed 's/,*$//')
@@ -78,7 +78,7 @@ jobs:
           && github.ref == 'refs/heads/main'
         with:
           # renovate: datasource=github-releases depName=dagger/dagger
-          version: v0.11.6
+          version: v0.11.7
           verb: call
           module: atomic
           # the labels transformation step below (xargs -I {} echo -n \"{}\", | sed 's/,*$//')
