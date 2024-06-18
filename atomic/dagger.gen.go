@@ -9,8 +9,8 @@ import (
 	"log/slog"
 	"os"
 
-	"dagger/my/internal/dagger"
-	"dagger/my/internal/telemetry"
+	"dagger/atomic/internal/dagger"
+	"dagger/atomic/internal/telemetry"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/sdk/resource"
@@ -753,6 +753,13 @@ func invoke(ctx context.Context, parentJSON []byte, parentName string, fnName st
 	switch parentName {
 	case "Atomic":
 		switch fnName {
+		case "Container":
+			var parent Atomic
+			err = json.Unmarshal(parentJSON, &parent)
+			if err != nil {
+				panic(fmt.Errorf("%s: %w", "failed to unmarshal parent object", err))
+			}
+			return (*Atomic).Container(&parent, ctx)
 		case "Publish":
 			var parent Atomic
 			err = json.Unmarshal(parentJSON, &parent)
@@ -914,13 +921,6 @@ func invoke(ctx context.Context, parentJSON []byte, parentName string, fnName st
 				}
 			}
 			return (*Atomic).PublishAndSign(&parent, ctx, registry, imageName, additionalTags, username, secret, skipSigningConfig, skipRegistryNamespace, skipDefaultTags, cosignPrivateKey, cosignPassword, dockerConfig, cosignImage, cosignUser)
-		case "Container":
-			var parent Atomic
-			err = json.Unmarshal(parentJSON, &parent)
-			if err != nil {
-				panic(fmt.Errorf("%s: %w", "failed to unmarshal parent object", err))
-			}
-			return (*Atomic).Container(&parent, ctx)
 		case "":
 			var parent Atomic
 			err = json.Unmarshal(parentJSON, &parent)
@@ -993,6 +993,10 @@ func invoke(ctx context.Context, parentJSON []byte, parentName string, fnName st
 			WithObject(
 				dag.TypeDef().WithObject("Atomic", TypeDefWithObjectOpts{Description: "Atomic represents the Dagger module type"}).
 					WithFunction(
+						dag.Function("Container",
+							dag.TypeDef().WithObject("Container")).
+							WithDescription("Container returns a Fedora Atomic container as a dagger.Container object")).
+					WithFunction(
 						dag.Function("Publish",
 							dag.TypeDef().WithListOf(dag.TypeDef().WithKind(StringKind))).
 							WithDescription("Publish build and publish the Fedora atomic container image").
@@ -1021,10 +1025,6 @@ func invoke(ctx context.Context, parentJSON []byte, parentName string, fnName st
 							WithArg("dockerConfig", dag.TypeDef().WithObject("File").WithOptional(true), FunctionWithArgOpts{Description: "Docker config"}).
 							WithArg("cosignImage", dag.TypeDef().WithKind(StringKind).WithOptional(true).WithOptional(true), FunctionWithArgOpts{Description: "Cosign container image to be used to sign the digests", DefaultValue: JSON("\"chainguard/cosign:latest\"")}).
 							WithArg("cosignUser", dag.TypeDef().WithKind(StringKind).WithOptional(true).WithOptional(true), FunctionWithArgOpts{Description: "Cosign container image user", DefaultValue: JSON("\"nonroot\"")})).
-					WithFunction(
-						dag.Function("Container",
-							dag.TypeDef().WithObject("Container")).
-							WithDescription("Container returns a Fedora Atomic container as a dagger.Container object")).
 					WithField("Source", dag.TypeDef().WithObject("Directory")).
 					WithField("Registry", dag.TypeDef().WithKind(StringKind), TypeDefWithFieldOpts{Description: "Source container image"}).
 					WithField("Org", dag.TypeDef().WithKind(StringKind)).

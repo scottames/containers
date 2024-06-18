@@ -21,6 +21,7 @@ develop update="false":
       if [[ "{{ update }}" = "true" ]]; then
         go get -u && go mod tidy
       fi
+      rm -f .gitignore # remove generated
       popd > /dev/null
       go work use "${_DAGGER_MOD}"
     done

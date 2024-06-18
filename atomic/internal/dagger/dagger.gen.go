@@ -20,8 +20,8 @@ import (
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
 
-	"dagger/my/internal/querybuilder"
-	"dagger/my/internal/telemetry"
+	"dagger/atomic/internal/querybuilder"
+	"dagger/atomic/internal/telemetry"
 )
 
 func Tracer() trace.Tracer {
