@@ -41,20 +41,21 @@
     {
       customType: 'regex',
       fileMatch: [
-        '\\.github\\/.+\\.yaml$',
-      ],
-      matchStrings: [
-        "renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)\\s*.*[vV][eE][rR][sS][iI][oO][nN]: +['\"]?(?<currentValue>[^'\" \\n]+)['\"]?$",
-      ],
-    },
-    {
-      customType: 'regex',
-      fileMatch: [
+        '^\\.github\\/workflows\\/([^\\/]+)\\.yaml$',
         'justfile',
       ],
       matchStrings: [
-        "renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)\\s*.*[vV][eE][rR][sS][iI][oO][nN] := +['\"]?(?<currentValue>[^'\" \\n]+)['\"]?$"
-      ]
-    }
+        // - order: datasource, depName, versioning (optional)
+        // - ends in 'version'
+        //    - value quoted or not
+        //    - combination of := between string 'version' and version capture
+        // - above line or end of line
+        //
+        // above line
+        "renovate:(\\sdatasource=(?<datasource>.*?))?\\sdepName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s+.*?[vV][eE][rR][sS][iI][oO][nN]\\s?[:=]+ +['\"]?(?<currentValue>[^'\" \\n]+)['\"]?\\s",
+        // in-line
+        "\\s+.*?[vV][eE][rR][sS][iI][oO][nN]\\s?[:=]+ +['\"]?(?<currentValue>[^'\" \\n]+)['\"]?\\s+.+ renovate:(\\sdatasource=(?<datasource>.*?))?\\sdepName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s",
+      ],
+    },
   ],
 }

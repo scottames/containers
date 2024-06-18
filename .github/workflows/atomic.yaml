@@ -41,12 +41,14 @@ jobs:
         id: sha_short
         run: echo "sha_short=${GITHUB_SHA::7}" >> "${GITHUB_OUTPUT}"
       - name: Docker Image Metadata From GitHub Repository
+        # yamllint disable-line rule:line-length
         uses: docker/metadata-action@8e5442c4ef9f78752691e2d8f8d19755c6f78e81 # v5
         id: generate_labels
         with:
           images: |
             ${{ env.IMAGE_NAME }}
       - name: Dagger Build and Publish (PR)
+        # yamllint disable-line rule:line-length
         uses: dagger/dagger-for-github@a3c3f2627ad38ef0b9334ef70dcd6a0e4617d2a7 # v5
         env:
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
@@ -69,6 +71,7 @@ jobs:
           # TODO:
           # cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
       - name: Dagger Build and Publish (main)
+        # yamllint disable-line rule:line-length
         uses: dagger/dagger-for-github@a3c3f2627ad38ef0b9334ef70dcd6a0e4617d2a7 # v5
         env:
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
