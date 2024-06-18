@@ -36,18 +36,18 @@ jobs:
       IMAGE_NAME: atomic-${{ matrix.variant }}-${{ matrix.suffix }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - name: GitHub SHA Short
         id: sha_short
         run: echo "sha_short=${GITHUB_SHA::7}" >> "${GITHUB_OUTPUT}"
       - name: Docker Image Metadata From GitHub Repository
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@8e5442c4ef9f78752691e2d8f8d19755c6f78e81 # v5
         id: generate_labels
         with:
           images: |
             ${{ env.IMAGE_NAME }}
       - name: Dagger Build and Publish (PR)
-        uses: dagger/dagger-for-github@v5
+        uses: dagger/dagger-for-github@a3c3f2627ad38ef0b9334ef70dcd6a0e4617d2a7 # v5
         env:
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
@@ -69,7 +69,7 @@ jobs:
           # TODO:
           # cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
       - name: Dagger Build and Publish (main)
-        uses: dagger/dagger-for-github@v5
+        uses: dagger/dagger-for-github@a3c3f2627ad38ef0b9334ef70dcd6a0e4617d2a7 # v5
         env:
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
