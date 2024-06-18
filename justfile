@@ -10,15 +10,19 @@ tagFedoraLatestVersion := "40"
 _default:
   @just --list --list-heading $'' --list-prefix $''
 
-# run `dagger develop` for all modules
-develop:
+# run `dagger develop` for all modules (set update=true to run go updates)
+develop update="false":
     #!/usr/bin/env bash
-    go work init
-    for dir in */; do
-      if [[ -f "${dir}/dagger.json" ]]; then
-        dagger develop -m "${dir}"
-        go work use "${dir}"
+    test -f go.work || go work init
+    for _DAGGER_MOD in $(find . -type f -name dagger.json | xargs dirname); do
+      echo "=> $_DAGGER_MOD"
+      pushd $_DAGGER_MOD > /dev/null
+      dagger develop
+      if [[ "{{ update }}" = "true" ]]; then
+        go get -u && go mod tidy
       fi
+      popd > /dev/null
+      go work use "${_DAGGER_MOD}"
     done
 
 # initialize a new Dagger module
