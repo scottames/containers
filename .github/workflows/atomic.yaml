@@ -61,9 +61,11 @@ jobs:
           version: v0.11.7
           verb: call
           module: atomic
-          # the labels transformation step below (xargs -I {} echo -n \"{}\", | sed 's/,*$//')
+          # the labels transformation step below
+          #    (xargs -I {} echo -n \"{}\", | sed 's/,*$//')
           #   changes the separator from newlines into comma
-          args: --source=.  --registry="${{ matrix.registry }}"  --org="${{ matrix.org }}"  --variant="${{ matrix.variant }}"  --suffix="${{ matrix.suffix }}"  --tag="${{ matrix.version }}"  --additional-labels="$(printf "${{ steps.generate_labels.outputs.labels }}" | xargs -I {} echo -n \"{}\", | sed 's/,*$//' )"  publish-and-sign  --registry="ghcr.io"  --image-name="${{ env.IMAGE_NAME }}"  --username="${{ github.actor }}"  --secret=env:GITHUB_TOKEN  --additional-tags="pr-${{ github.event.number }}-${{ matrix.version}},pr-${{ github.event.number }}-${{ matrix.version}}-${{ steps.sha_short.outputs.sha_short }}" --skip-default-tags --cosign-private-key=env:COSIGN_PRIVATE_KEY  --cosign-password=env:COSIGN_PASSWORD
+          # yamllint disable-line rule:line-length
+          args: --source=.  --registry="${{ matrix.registry }}"  --org="${{ matrix.org }}"  --variant="${{ matrix.variant }}"  --suffix="${{ matrix.suffix }}"  --tag="${{ matrix.version }}"  --additional-labels="$(printf "${{ steps.generate_labels.outputs.labels }}" | xargs -I {} echo -n \"{}\", | sed 's/,*$//' )"  publish-and-sign  --registry="ghcr.io"  --image-name="${{ env.IMAGE_NAME }}"  --username="${{ github.repository_owner }}"  --secret=env:GITHUB_TOKEN  --additional-tags="pr-${{ github.event.number }}-${{ matrix.version}},pr-${{ github.event.number }}-${{ matrix.version}}-${{ steps.sha_short.outputs.sha_short }}" --skip-default-tags --cosign-private-key=env:COSIGN_PRIVATE_KEY  --cosign-password=env:COSIGN_PASSWORD
           # TODO:
           # cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
       - name: Dagger Build and Publish (main)
@@ -81,8 +83,10 @@ jobs:
           version: v0.11.7
           verb: call
           module: atomic
-          # the labels transformation step below (xargs -I {} echo -n \"{}\", | sed 's/,*$//')
+          # the labels transformation step below
+          #    (xargs -I {} echo -n \"{}\", | sed 's/,*$//')
           #   changes the separator from newlines into comma
-          args: --source=.  --registry="${{ matrix.registry }}"  --org="${{ matrix.org }}"  --variant="${{ matrix.variant }}"  --suffix="${{ matrix.suffix }}"  --tag="${{ matrix.version }}"  --additional-labels="$(printf "${{ steps.generate_labels.outputs.labels }}" | xargs -I {} echo -n \"{}\", | sed 's/,*$//' )"  publish-and-sign  --registry="ghcr.io"  --image-name="${{ env.IMAGE_NAME }}"  --username="${{ github.actor }}"  --secret=env:GITHUB_TOKEN  --cosign-private-key=env:COSIGN_PRIVATE_KEY  --cosign-password=env:COSIGN_PASSWORD
+          # yamllint disable-line rule:line-length
+          args: --source=.  --registry="${{ matrix.registry }}"  --org="${{ matrix.org }}"  --variant="${{ matrix.variant }}"  --suffix="${{ matrix.suffix }}"  --tag="${{ matrix.version }}"  --additional-labels="$(printf "${{ steps.generate_labels.outputs.labels }}" | xargs -I {} echo -n \"{}\", | sed 's/,*$//' )"  publish-and-sign  --registry="ghcr.io"  --image-name="${{ env.IMAGE_NAME }}"  --username="${{ github.repository_owner }}"  --secret=env:GITHUB_TOKEN  --cosign-private-key=env:COSIGN_PRIVATE_KEY  --cosign-password=env:COSIGN_PASSWORD
           # TODO:
           # cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
