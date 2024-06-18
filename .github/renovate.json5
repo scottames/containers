@@ -57,6 +57,13 @@
         "\\s+.*?[vV][eE][rR][sS][iI][oO][nN]\\s?[:=]+ +['\"]?(?<currentValue>[^'\" \\n]+)['\"]?\\s+.+ renovate:(\\sdatasource=(?<datasource>.*?))?\\sdepName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s",
       ],
     },
+    {
+      customType: 'regex',
+      fileMatch: ['dagger.json'],
+      matchStrings: ["engineVersion\":\\s\"(?<currentValue>[^'\" \\n]+)\"\\s"],
+      depNameTemplate: 'dagger/dagger',
+      datasourceTemplate: 'github-releases'
+    }
   ],
   packageRules: [
     {
