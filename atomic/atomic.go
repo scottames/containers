@@ -83,11 +83,8 @@ var (
 		"qemu-system-x86-core",
 		"qemu-user-binfmt",
 		"qemu-user-static",
-
-		// TODO: re-enabled on kernel upgrade
-		// "virt-manager",
-		// "virt-viewer",
-
+		"virt-manager",
+		"virt-viewer",
 		// Required for ZSA voyager
 		"gtk3",
 		"libusb",
