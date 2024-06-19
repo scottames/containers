@@ -1,0 +1,45 @@
+---
+name: dagger-update
+on:
+  pull_request:
+    paths:
+      - "**/dagger.json"
+jobs:
+  dagger-update:
+    name: Update Dagger Modules
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+    steps:
+      - name: checkout
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+        with:
+          # should be used for PRs only
+          # https://github.com/marketplace/actions/add-commit#working-with-prs
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+      - name: install dagger
+        uses: sigoden/install-binary@v1
+        with:
+          repo: dagger/dagger
+          tag: v0.11.7
+      - name: install just
+        uses: sigoden/install-binary@v1
+        with:
+          repo: casey/just
+          tag: 1.29.1
+      - name: Install golang
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.22.4" # TODO: renovate
+      - name: dagger develop
+        run: |
+          just develop true
+      - name: add & commit
+        uses: EndBug/add-and-commit@v9.1.4
+        with:
+          message: "chore: dagger + go updates"
+          committer_name: github-actions[bot]
+          committer_email: github-actions[bot]@users.noreply.github.com
