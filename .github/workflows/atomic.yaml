@@ -7,9 +7,14 @@ on:
     branches:
       - main
     paths:
-      - atomic/**
-  # yamllint disable-line rule:empty-values
+      - atomic/**.go
+      - atomic/go.*
+      - .github/workflows/atomic.yaml
   pull_request:
+    paths:
+      - atomic/**.go
+      - atomic/go.*
+      - .github/workflows/atomic.yaml
   # yamllint disable-line rule:empty-values
   workflow_dispatch:
 jobs:

@@ -8,10 +8,15 @@ on:
       - main
     paths:
       - toolbox/**.go
+      - toolbox/go.*
       - .github/workflows/toolbox.yaml
       - .github/workflows/reusable-toolbox.yaml
-  # yamllint disable-line rule:empty-values
   pull_request:
+    paths:
+      - toolbox/**.go
+      - toolbox/go.*
+      - .github/workflows/toolbox.yaml
+      - .github/workflows/reusable-toolbox.yaml
   # yamllint disable-line rule:empty-values
   workflow_dispatch:
 jobs:
