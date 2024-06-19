@@ -53,7 +53,7 @@ jobs:
           && github.ref != 'refs/heads/main'
         with:
           # renovate: datasource=github-releases depName=dagger/dagger
-          version: v0.11.7
+          version: v0.11.8
           verb: call
           module: ${{ inputs.module }}
           # yamllint disable-line rule:line-length
@@ -73,7 +73,7 @@ jobs:
           && github.ref == 'refs/heads/main'
         with:
           # renovate: datasource=github-releases depName=dagger/dagger
-          version: v0.11.7
+          version: v0.11.8
           verb: call
           module: ${{ inputs.module }}
           # yamllint disable-line rule:line-length

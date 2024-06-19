@@ -30,7 +30,7 @@ jobs:
         with:
           repo: dagger/dagger
           # renovate: datasource=github-releases depName=dagger/dagger
-          tag: v0.11.7
+          tag: v0.11.8
       - name: install just
         uses: sigoden/install-binary@v1
         with:
