@@ -1,9 +1,14 @@
 ---
 name: dagger-update
 on:
-  pull_request:
+  # using on: pull_request causes a loop
+  # run on pushes to renovate branches
+  # with path filter
+  push:
     paths:
       - "**/dagger.json"
+    branches:
+      - renovate/*
 jobs:
   dagger-update:
     name: Update Dagger Modules
@@ -24,22 +29,50 @@ jobs:
         uses: sigoden/install-binary@v1
         with:
           repo: dagger/dagger
+          # renovate: datasource=github-releases depName=dagger/dagger
           tag: v0.11.7
       - name: install just
         uses: sigoden/install-binary@v1
         with:
           repo: casey/just
           tag: 1.29.1
+      - name: install ghcp
+        uses: sigoden/install-binary@v1
+        with:
+          repo: int128/ghcp
+          tag: v1.13.3
       - name: Install golang
         uses: actions/setup-go@v5
         with:
-          go-version: "1.22.4" # TODO: renovate
-      - name: dagger develop
+          # renovate: datasource=golang-version depName=go
+          go-version: "1.22.4"
+      - name: just dagger develop
         run: |
           just develop true
-      - name: add & commit
-        uses: EndBug/add-and-commit@v9.1.4
+      - name: generate app token
+        id: generate_app_token
+        if: "! github.event.pull_request.head.repo.fork"
+        # yamllint disable-line rule:line-length
+        uses: suzuki-shunsuke/github-token-action@350d7506222e3a0016491abe85b5c4dd475b67d1 # v0.2.1
         with:
-          message: "chore: dagger + go updates"
-          committer_name: github-actions[bot]
-          committer_email: github-actions[bot]@users.noreply.github.com
+          github_app_id: ${{secrets.GH_APP_ID}}
+          github_app_private_key: ${{secrets.GH_APP_PRIVATE_KEY}}
+          github_app_permissions: >-
+            { "contents": "write" }
+          github_app_repositories: >-
+            ["${{github.event.repository.name}}"]
+      - name: ghcp push changes
+        env:
+          GITHUB_REPOSITORY: ${{github.event.repository.name}}
+          GITHUB_TOKEN: ${{steps.generate_app_token.outputs.token}}
+        run: |
+          branch=${GITHUB_HEAD_REF:-} # https://github.com/int128/ghcp
+          if [ -z "${branch}" ]; then
+            branch="${GITHUB_REF_NAME}"
+          fi
+          # shellcheck disable=SC2046
+          # ^- we want it to split!
+          ghcp commit -r "$GITHUB_REPOSITORY" -b "${branch}" \
+            -m "chore(aqua): dagger + go updates" \
+            $(git --no-pager diff --name-only)
+          exit 1

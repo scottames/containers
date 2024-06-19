@@ -53,8 +53,12 @@
         //
         // above line
         "renovate:(\\sdatasource=(?<datasource>.*?))?\\sdepName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s+.*?[vV][eE][rR][sS][iI][oO][nN]\\s?[:=]+ +['\"]?(?<currentValue>[^'\" \\n]+)['\"]?\\s",
+        // same as above s/version/tag/
+        "renovate:(\\sdatasource=(?<datasource>.*?))?\\sdepName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s+.*?[tT][aA][gG]\\s?[:=]+ +['\"]?(?<currentValue>[^'\" \\n]+)['\"]?\\s",
         // in-line
         "\\s+.*?[vV][eE][rR][sS][iI][oO][nN]\\s?[:=]+ +['\"]?(?<currentValue>[^'\" \\n]+)['\"]?\\s+.+ renovate:(\\sdatasource=(?<datasource>.*?))?\\sdepName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s",
+        // same as above s/version/tag/
+        "\\s+.*?[tT][aA][gG]\\s?[:=]+ +['\"]?(?<currentValue>[^'\" \\n]+)['\"]?\\s+.+ renovate:(\\sdatasource=(?<datasource>.*?))?\\sdepName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s",
       ],
     },
     {
