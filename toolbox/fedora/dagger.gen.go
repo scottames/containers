@@ -751,6 +751,7 @@ func dispatch(ctx context.Context) error {
 }
 
 func invoke(ctx context.Context, parentJSON []byte, parentName string, fnName string, inputArgs map[string][]byte) (_ any, err error) {
+	_ = inputArgs
 	switch parentName {
 	case "FedoraToolbox":
 		switch fnName {
