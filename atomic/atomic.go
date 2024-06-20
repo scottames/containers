@@ -58,7 +58,6 @@ var (
 		"pipx",
 		"podman-compose",
 		"podman-tui",
-		"podmansh",
 		"powerline-fonts",
 		"powertop",
 		"pulseaudio-utils",
