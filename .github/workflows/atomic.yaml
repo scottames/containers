@@ -33,9 +33,8 @@ jobs:
         variant: [silverblue]
         suffix:
           - main
-          # FIXME: - nvidia
+          - nvidia
         version:
-          # FIXME: - "39"
           - "40"
     env:
       IMAGE_NAME: atomic-${{ matrix.variant }}-${{ matrix.suffix }}
