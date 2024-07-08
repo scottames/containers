@@ -5,14 +5,16 @@ import "fmt"
 // ctrSigningConfig updates the universal-blue-esk signing config
 func (a *Atomic) ctrSigningConfig(
 	ctr *Container,
-	imageName string,
+	username string,
+	repo string,
 	imageRegistry string,
-	version string,
+	imageName string,
+	imageVersion string,
 ) *Container {
 	imageInfo := fmt.Sprintf(`{
   "image-ref": "ostree-image-signed:docker://%s/%s",
   "image-tag": "%s"
-		}`, imageRegistry, imageName, version)
+		}`, imageRegistry, imageName, imageVersion)
 	registriesD := fmt.Sprintf("/usr/etc/containers/registries.d/%s.yaml", imageName)
 
 	yq := dag.Container().From("docker.io/mikefarah/yq")
@@ -27,9 +29,11 @@ func (a *Atomic) ctrSigningConfig(
 			},
 		).
 		WithNewFile(registriesD, ContainerWithNewFileOpts{
-			Contents: fmt.Sprintf(
-				"docker:\\n  %s:\\n    use-sigstore-attachments: true\\n",
-				imageRegistry,
+			Contents: fmt.Sprintf(`docker:
+  %s/%s:
+      use-sigstore-attachments: true
+`,
+				imageRegistry, username,
 			),
 			Permissions: 0644,
 			Owner:       "root",
@@ -47,7 +51,8 @@ func (a *Atomic) ctrSigningConfig(
 		}
 	]
 }
-+ .`, imageRegistry, imageName, imageName),
+
++ .`, imageRegistry, repo, imageName), // TODO: git repo instead
 			"/usr/etc/containers/policy.json",
 		})
 }

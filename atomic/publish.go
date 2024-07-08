@@ -10,20 +10,23 @@ import (
 func (a *Atomic) publish(
 	ctx context.Context,
 	// registry url, e.g. ghcr.io
-	registry string,
+	imageRegistry string,
 	// name of the image
 	imageName string,
-	// additional tags to publish in addition to the default tags
-	// default tags will be included unless skipDefaultTags is set:
-	//  [majorVersion, majorVersion-date, date]
+	// repository name, if different from imageName
 	// +optional
-	additionalTags []string,
+	repository *string,
 	// registry username
 	// also used as the registry namespace
 	username string,
 	// registry auth password/secret
 	// +optional
 	secret *Secret,
+	// additional tags to publish in addition to the default tags
+	// default tags will be included unless skipDefaultTags is set:
+	//  [majorVersion, majorVersion-date, date]
+	// +optional
+	additionalTags []string,
 	// skip opinionated ublue-way of setting up signing config
 	//   note: if basing off of ublue, this is already setup,
 	//         but not for the source image
@@ -50,15 +53,26 @@ func (a *Atomic) publish(
 
 	if secret != nil {
 		// NOTE: the auth step MUST be bare registry w/o username namespace
-		ctr = ctr.WithRegistryAuth(registry, username, secret)
+		ctr = ctr.WithRegistryAuth(imageRegistry, username, secret)
 	}
 
 	if !skipRegistryNamespace {
-		registry = strings.ToLower(fmt.Sprintf("%s/%s", registry, username))
+		imageRegistry = strings.ToLower(fmt.Sprintf("%s/%s", imageRegistry, username))
+	}
+
+	if repository == nil {
+		repository = &imageName
 	}
 
 	if !skipSigningConfig {
-		ctr = a.ctrSigningConfig(ctr, imageName, registry, a.ReleaseVersion)
+		ctr = a.ctrSigningConfig(
+			ctr,
+			username,
+			*repository,
+			imageRegistry,
+			imageName,
+			a.ReleaseVersion,
+		)
 	}
 
 	ctr = ctr.WithLabel("org.opencontainers.image.title", imageName).
@@ -73,7 +87,7 @@ func (a *Atomic) publish(
 	for _, tag := range tags {
 		digest, err := ctr.Publish(
 			ctx,
-			fmt.Sprintf("%s/%s:%s", registry, imageName, tag),
+			fmt.Sprintf("%s/%s:%s", imageRegistry, imageName, tag),
 		)
 		if err != nil {
 			return nil, err
@@ -88,20 +102,23 @@ func (a *Atomic) publish(
 func (a *Atomic) Publish(
 	ctx context.Context,
 	// registry url, e.g. ghcr.io
-	registry string,
+	imageRegistry string,
 	// name of the image
 	imageName string,
-	// additional tags to publish in addition to the default tags
-	// default tags will be included unless skipDefaultTags is set:
-	//  [majorVersion, majorVersion-date, date]
+	// repository name, if different from imageName
 	// +optional
-	additionalTags []string,
+	repository *string,
 	// registry username
 	// also used as the registry namespace
 	username string,
 	// registry auth password/secret
 	// +optional
 	secret *Secret,
+	// additional tags to publish in addition to the default tags
+	// default tags will be included unless skipDefaultTags is set:
+	//  [majorVersion, majorVersion-date, date]
+	// +optional
+	additionalTags []string,
 	// skip opinionated ublue-way of setting up signing config
 	//   note: if basing off of ublue, this is already setup,
 	//         but not for the source image
@@ -123,11 +140,12 @@ func (a *Atomic) Publish(
 ) ([]string, error) {
 	_, err := a.publish(
 		ctx,
-		registry,
+		imageRegistry,
 		imageName,
-		additionalTags,
+		repository,
 		username,
 		secret,
+		additionalTags,
 		skipSigningConfig,
 		skipRegistryNamespace,
 		skipDefaultTags,
@@ -144,20 +162,23 @@ func (a *Atomic) Publish(
 func (a *Atomic) PublishAndSign(
 	ctx context.Context,
 	// registry url, e.g. ghcr.io
-	registry string,
+	imageRegistry string,
 	// name of the image
 	imageName string,
-	// additional tags to publish in addition to the default tags
-	// default tags will be included unless skipDefaultTags is set:
-	//  [majorVersion, majorVersion-date, date]
+	// repository name, if different from imageName
 	// +optional
-	additionalTags []string,
+	repository *string,
 	// registry username
 	// also used as the registry namespace
 	username string,
 	// registry auth password/secret
 	// +optional
 	secret *Secret,
+	// additional tags to publish in addition to the default tags
+	// default tags will be included unless skipDefaultTags is set:
+	//  [majorVersion, majorVersion-date, date]
+	// +optional
+	additionalTags []string,
 	// skip opinionated ublue-way of setting up signing config
 	//   note: if basing off of ublue, this is already setup,
 	//         but not for the source image
@@ -194,11 +215,12 @@ func (a *Atomic) PublishAndSign(
 ) ([]string, error) {
 	_, err := a.publish(
 		ctx,
-		registry,
+		imageRegistry,
 		imageName,
-		additionalTags,
+		repository,
 		username,
 		secret,
+		additionalTags,
 		skipSigningConfig,
 		skipRegistryNamespace,
 		skipDefaultTags,
