@@ -56,10 +56,9 @@ jobs:
           version: v0.11.9
           verb: call
           module: ${{ inputs.module }}
+          cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
           # yamllint disable-line rule:line-length
           args: publish-and-sign  --registry="ghcr.io"  --image-name="${{ env.IMAGE_NAME }}"  --username="${{ github.repository_owner }}"  --secret=env:GITHUB_TOKEN  --additional-tags="pr-${{ github.event.number }}-${{ inputs.version}},pr-${{ github.event.number }}-${{ inputs.version}}-${{ steps.sha_short.outputs.sha_short }}"  --skip-default-tags  --cosign-private-key=env:COSIGN_PRIVATE_KEY  --cosign-password=env:COSIGN_PASSWORD
-          # TODO:
-          # cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
       - name: Dagger Build and Publish (main)
         # yamllint disable-line rule:line-length
         uses: dagger/dagger-for-github@11048419d80c283890d0dd68187d44541f63dd89 # v5
@@ -76,7 +75,6 @@ jobs:
           version: v0.11.9
           verb: call
           module: ${{ inputs.module }}
+          cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
           # yamllint disable-line rule:line-length
           args: publish-and-sign  --registry="ghcr.io"  --image-name="${{ env.IMAGE_NAME }}"   --latest --username="${{ github.repository_owner }}"  --secret=env:GITHUB_TOKEN  --cosign-private-key=env:COSIGN_PRIVATE_KEY  --cosign-password=env:COSIGN_PASSWORD
-          # TODO:
-          # cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
