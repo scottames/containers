@@ -67,7 +67,6 @@ func (a *Atomic) publish(
 	if !skipSigningConfig {
 		ctr = a.ctrSigningConfig(
 			ctr,
-			username,
 			*repository,
 			imageRegistry,
 			imageName,

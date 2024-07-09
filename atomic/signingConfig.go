@@ -5,7 +5,6 @@ import "fmt"
 // ctrSigningConfig updates the universal-blue-esk signing config
 func (a *Atomic) ctrSigningConfig(
 	ctr *Container,
-	username string,
 	repo string,
 	imageRegistry string,
 	imageName string,
@@ -18,10 +17,11 @@ func (a *Atomic) ctrSigningConfig(
 	registriesD := fmt.Sprintf("/usr/etc/containers/registries.d/%s.yaml", imageName)
 
 	yq := dag.Container().From("docker.io/mikefarah/yq")
+	cosignPubKeyPath := fmt.Sprintf("/usr/etc/pki/containers/%s.pub", imageName)
 
 	return ctr.
 		WithFile("/usr/bin/yq", yq.File("/usr/bin/yq")).
-		WithFile(fmt.Sprintf("/usr/etc/pki/containers/%s.pub", imageName), a.Source.File("cosign.pub")).
+		WithFile(cosignPubKeyPath, a.Source.File("cosign.pub")).
 		WithNewFile(
 			"/usr/share/ublue-os/image-info.json",
 			ContainerWithNewFileOpts{
@@ -30,10 +30,10 @@ func (a *Atomic) ctrSigningConfig(
 		).
 		WithNewFile(registriesD, ContainerWithNewFileOpts{
 			Contents: fmt.Sprintf(`docker:
-  %s/%s:
+  %s:
       use-sigstore-attachments: true
 `,
-				imageRegistry, username,
+				imageRegistry,
 			),
 			Permissions: 0644,
 			Owner:       "root",
@@ -44,7 +44,7 @@ func (a *Atomic) ctrSigningConfig(
 {"%s/%s": [
 		{
 			"type": "sigstoreSigned",
-			"keyPath": "/usr/etc/pki/containers/%s.pub",
+			"keyPath": "%s",
 			"signedIdentity": {
 				"type": "matchRepository"
 			}
@@ -52,7 +52,7 @@ func (a *Atomic) ctrSigningConfig(
 	]
 }
 
-+ .`, imageRegistry, repo, imageName), // TODO: git repo instead
++ .`, imageRegistry, repo, cosignPubKeyPath), // TODO: git repo instead
 			"/usr/etc/containers/policy.json",
 		})
 }
