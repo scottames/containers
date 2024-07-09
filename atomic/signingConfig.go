@@ -13,7 +13,7 @@ func (a *Atomic) ctrSigningConfig(
 	imageInfo := fmt.Sprintf(`{
   "image-ref": "ostree-image-signed:docker://%s/%s",
   "image-tag": "%s"
-		}`, imageRegistry, imageName, imageVersion)
+}`, imageRegistry, imageName, imageVersion)
 	registriesD := fmt.Sprintf("/usr/etc/containers/registries.d/%s.yaml", imageName)
 
 	yq := dag.Container().From("docker.io/mikefarah/yq")
