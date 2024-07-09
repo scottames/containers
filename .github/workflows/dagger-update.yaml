@@ -26,18 +26,18 @@ jobs:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.ref }}
       - name: install dagger
-        uses: sigoden/install-binary@3a369a4f1787bc51dc3b5b8f6055920fef1d2eca # v1
+        uses: sigoden/install-binary@7eb4b088aedf19fe9b2bc6c6bbdc12379ffb355c # v1
         with:
           repo: dagger/dagger
           # renovate: datasource=github-releases depName=dagger/dagger
           tag: v0.11.9
       - name: install just
-        uses: sigoden/install-binary@3a369a4f1787bc51dc3b5b8f6055920fef1d2eca # v1
+        uses: sigoden/install-binary@7eb4b088aedf19fe9b2bc6c6bbdc12379ffb355c # v1
         with:
           repo: casey/just
           tag: 1.29.1
       - name: install ghcp
-        uses: sigoden/install-binary@3a369a4f1787bc51dc3b5b8f6055920fef1d2eca # v1
+        uses: sigoden/install-binary@7eb4b088aedf19fe9b2bc6c6bbdc12379ffb355c # v1
         with:
           repo: int128/ghcp
           tag: v1.13.3
