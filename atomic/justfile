@@ -4,11 +4,11 @@ atomic-container registry="ghcr.io" org="ublue-os" variant="silverblue" suffix="
     --progress={{ progress }} \
     call \
     -m atomic \
-      --registry "{{ registry }}" \
-      --org      "{{ org }}" \
-      --tag      "{{ tagFedoraLatestVersion }}" \
-      --variant  "{{ variant }}" \
-      --suffix   "{{ suffix }}" \
+      --image-registry "{{ registry }}" \
+      --org            "{{ org }}" \
+      --tag            "{{ tagFedoraLatestVersion }}" \
+      --variant        "{{ variant }}" \
+      --suffix         "{{ suffix }}" \
       --additional-labels="$(printf "{{ labels }}" | sed -n -e 'H;${x;s/\n/,/g;s/^,//;p;}' )" \
       --source   . \
       container {{ args }}
@@ -18,7 +18,7 @@ atomic-publish registry="ghcr.io" org="ublue-os" variant="silverblue" suffix="ma
   dagger call \
     --progress=plain \
     -m atomic \
-      --registry "{{ registry }}" \
+      --image-registry "{{ registry }}" \
       --org      "{{ org }}" \
       --tag      "{{ tagFedoraLatestVersion }}" \
       --variant  "{{ variant }}" \
@@ -26,8 +26,9 @@ atomic-publish registry="ghcr.io" org="ublue-os" variant="silverblue" suffix="ma
       --additional-labels="$(printf "{{ labels }}" | sed -n -e 'H;${x;s/\n/,/g;s/^,//;p;}' )" \
       --source   . \
     publish \
-      --registry="{{ registry }}" \
+      --image-registry="{{ registry }}" \
       --image-name="{{ name }}" \
+      --repository="containers" \
       --username=$GITHUB_USERNAME \
       --secret=env:GITHUB_TOKEN \
       --additional-tags="$(printf "{{ tags }}" | sed -n -e 'H;${x;s/\n/,/g;s/^,//;p;}' )" \
@@ -45,7 +46,7 @@ atomic-publish-and-sign registry="ghcr.io" org="ublue-os" variant="silverblue" s
     --progress=plain \
     call \
     -m atomic \
-      --registry "{{ registry }}" \
+      --image-registry "{{ registry }}" \
       --org      "{{ org }}" \
       --tag      "{{ tagFedoraLatestVersion }}" \
       --variant  "{{ variant }}" \
@@ -53,8 +54,9 @@ atomic-publish-and-sign registry="ghcr.io" org="ublue-os" variant="silverblue" s
       --additional-labels="$(printf "{{ labels }}" | sed -n -e 'H;${x;s/\n/,/g;s/^,//;p;}' )" \
       --source   . \
     publish-and-sign \
-      --registry=ghcr.io \
+      --image-registry=ghcr.io \
       --image-name="{{ name }}" \
+      --repository="containers" \
       --username=$GITHUB_USERNAME \
       --secret=env:GITHUB_TOKEN \
       --additional-tags="$(printf "{{ tags }}" | sed -n -e 'H;${x;s/\n/,/g;s/^,//;p;}' )" \
