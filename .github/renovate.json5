@@ -28,8 +28,7 @@
     'gomodUpdateImportPaths',
   ],
   gomod: {
-    enabled: true,
-    commitMessageTopic: '⇡ golang module {{depName}}',
+    enabled: false, // dagger should handle changes to go.mod/sum
   },
   vulnerabilityAlerts: {
     enabled: true,

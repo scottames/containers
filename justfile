@@ -17,11 +17,12 @@ develop update="false":
     for _DAGGER_MOD in $(find . -type f -name dagger.json | xargs dirname); do
       echo "=> $_DAGGER_MOD"
       pushd $_DAGGER_MOD > /dev/null
+      gobrew use mod
       dagger develop
       if [[ "{{ update }}" = "true" ]]; then
         go get -u && go mod tidy
       fi
-      rm -f .gitignore # remove generated
+      rm -f LICENSE # remove generated LICENSE
       popd > /dev/null
       go work use "${_DAGGER_MOD}"
     done
