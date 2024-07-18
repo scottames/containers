@@ -61,7 +61,7 @@ jobs:
           AQUA_GITHUB_TOKEN: ${{ steps.generate_app_token.outputs.token }}
       - uses: kevincobain2000/action-gobrew@v2
         with:
-          version: 1.22.4 # renovate: datasource=golang-version depName=go
+          version: 1.22.5 # renovate: datasource=golang-version depName=go
       - name: dagger develop
         run: |
           just develop
