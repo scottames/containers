@@ -3,16 +3,16 @@
   "sdk": "go",
   "dependencies": [
     {
-      "name": "cosign",
-      "source": "github.com/scottames/daggerverse/cosign@e04584e46ee2d626b2f09e90ba0b8ec3464650d2"
+      "name": "distrobox",
+      "source": "github.com/scottames/daggerverse/distrobox@2448fda9ede3eb2d134587fe05b00dc9a09082a9"
     },
     {
-      "name": "distrobox",
-      "source": "github.com/scottames/daggerverse/distrobox@e04584e46ee2d626b2f09e90ba0b8ec3464650d2"
+      "name": "cosign",
+      "source": "github.com/scottames/daggerverse/cosign@2448fda9ede3eb2d134587fe05b00dc9a09082a9"
     },
     {
       "name": "fedora",
-      "source": "github.com/scottames/daggerverse/fedora@2a639f1e00a1c44a6c041ccac12460409cd59dc1"
+      "source": "github.com/scottames/daggerverse/fedora@2448fda9ede3eb2d134587fe05b00dc9a09082a9"
     }
   ],
   "source": ".",
