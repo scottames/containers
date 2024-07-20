@@ -4,6 +4,7 @@ package main
 
 import (
 	"context"
+	"dagger/toolbox-fedora/internal/dagger"
 	"fmt"
 )
 
@@ -149,8 +150,8 @@ func New(
 
 // fedora returns the dagger.Fedora object with the current container context
 // associated
-func (ft *FedoraToolbox) fedora(ctx context.Context) *Fedora {
-	opts := FedoraOpts{
+func (ft *FedoraToolbox) fedora(ctx context.Context) *dagger.Fedora {
+	opts := dagger.FedoraOpts{
 		Registry: ft.Registry,
 		Variant:  ft.Image,
 		Tag:      ft.Tag,
@@ -175,7 +176,7 @@ func (ft *FedoraToolbox) fedora(ctx context.Context) *Fedora {
 }
 
 // Container returns the Fedora toolbx/distrobox dagger.Container
-func (ft *FedoraToolbox) Container(ctx context.Context) (*Container, error) {
+func (ft *FedoraToolbox) Container(ctx context.Context) (*dagger.Container, error) {
 	fedora := ft.fedora(ctx)
 
 	for n, v := range labels {
@@ -201,7 +202,7 @@ func (ft *FedoraToolbox) Container(ctx context.Context) (*Container, error) {
 			dbheFile,
 		).
 		WithFile("/usr/bin/host-spawn", hostSpawn,
-			ContainerWithFileOpts{Permissions: 0755, Owner: "root"},
+			dagger.ContainerWithFileOpts{Permissions: 0755, Owner: "root"},
 		).
 		WithExec([]string{
 			"pipx", "install", "--global",
@@ -212,7 +213,7 @@ func (ft *FedoraToolbox) Container(ctx context.Context) (*Container, error) {
 	return ctr, nil
 }
 
-func (ft *FedoraToolbox) distroboxHostExecSymlinks(fedora *Fedora) *Fedora {
+func (ft *FedoraToolbox) distroboxHostExecSymlinks(fedora *dagger.Fedora) *dagger.Fedora {
 	for _, link := range distroboxHostExecSymlinks {
 		fedora = fedora.WithExec([]string{
 			"ln", "-fs", "/usr/bin/distrobox-host-exec",

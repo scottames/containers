@@ -1,15 +1,18 @@
 package main
 
-import "fmt"
+import (
+	"dagger/atomic/internal/dagger"
+	"fmt"
+)
 
 // ctrSigningConfig updates the universal-blue-esk signing config
 func (a *Atomic) ctrSigningConfig(
-	ctr *Container,
+	ctr *dagger.Container,
 	repo string,
 	imageRegistry string,
 	imageName string,
 	imageVersion string,
-) *Container {
+) *dagger.Container {
 	imageInfo := fmt.Sprintf(`{
   "image-ref": "ostree-image-signed:docker://%s/%s",
   "image-tag": "%s"
@@ -24,20 +27,21 @@ func (a *Atomic) ctrSigningConfig(
 		WithFile(cosignPubKeyPath, a.Source.File("cosign.pub")).
 		WithNewFile(
 			"/usr/share/ublue-os/image-info.json",
-			ContainerWithNewFileOpts{
-				Contents: imageInfo, Permissions: 0644, Owner: "root",
+			imageInfo,
+			dagger.ContainerWithNewFileOpts{
+				Permissions: 0644, Owner: "root",
 			},
 		).
-		WithNewFile(registriesD, ContainerWithNewFileOpts{
-			Contents: fmt.Sprintf(`docker:
+		WithNewFile(
+			registriesD,
+			fmt.Sprintf(`docker:
   %s:
       use-sigstore-attachments: true
-`,
-				imageRegistry,
-			),
-			Permissions: 0644,
-			Owner:       "root",
-		}).
+`, imageRegistry),
+			dagger.ContainerWithNewFileOpts{
+				Permissions: 0644,
+				Owner:       "root",
+			}).
 		WithExec([]string{
 			"yq", "-i", "-o=j",
 			fmt.Sprintf(`.transports.docker |=

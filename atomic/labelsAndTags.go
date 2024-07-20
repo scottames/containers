@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"dagger/atomic/internal/dagger"
 	"fmt"
 	"strings"
 )
@@ -9,8 +10,8 @@ import (
 // fedoraWithLabelsFromCLI returns the provided Fedora object with the labels
 // from the CLI added
 func (a *Atomic) fedoraWithLabelsFromCLI(
-	fedora *Fedora,
-) (*Fedora, error) {
+	fedora *dagger.Fedora,
+) (*dagger.Fedora, error) {
 	for _, l := range a.Labels {
 		ll := strings.SplitN(l, "=", 2)
 		if len(ll) < 2 {
@@ -32,8 +33,8 @@ func (a *Atomic) fedoraWithLabelsFromCLI(
 //	io.artifacthub.package.logo-url (if org=ublue-os)
 func (a *Atomic) fedoraWithDefaultLabels(
 	ctx context.Context,
-	fedora *Fedora,
-) (*Fedora, error) {
+	fedora *dagger.Fedora,
+) (*dagger.Fedora, error) {
 	// note: universal blue appends a build number, we do not
 	fedora = fedora.WithLabel(
 		"org.opencontainers.image.version",

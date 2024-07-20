@@ -16,6 +16,7 @@ package main
 
 import (
 	"context"
+	"dagger/atomic/internal/dagger"
 	"fmt"
 	"slices"
 )
@@ -24,7 +25,7 @@ func New(
 	ctx context.Context,
 	// Git repository root directory
 	// referenced by Atomic.fedoraAtomic to determine the path to local files
-	source *Directory,
+	source *dagger.Directory,
 	// Container registry
 	// +optional
 	// +default="quay.io"
@@ -79,7 +80,7 @@ func New(
 
 // Atomic represents the Dagger module type
 type Atomic struct {
-	Source *Directory
+	Source *dagger.Directory
 
 	// Source container image
 	Registry string
@@ -103,7 +104,7 @@ type Atomic struct {
 }
 
 // Container returns a Fedora Atomic container as a dagger.Container object
-func (a *Atomic) Container(ctx context.Context) (*Container, error) {
+func (a *Atomic) Container(ctx context.Context) (*dagger.Container, error) {
 	fedora, err := a.fedoraAtomic(ctx)
 	if err != nil {
 		return nil, err

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"dagger/toolbox-fedora/internal/dagger"
 	"fmt"
 	"strings"
 )
@@ -23,7 +24,7 @@ func (ft *FedoraToolbox) publish(
 	username string,
 	// registry auth password/secret
 	// +optional
-	secret *Secret,
+	secret *dagger.Secret,
 	// skip namespacing registry with username
 	//   example:
 	//     registry=ghcr.io username=foo
@@ -96,7 +97,7 @@ func (ft *FedoraToolbox) Publish(
 	username string,
 	// registry auth password/secret
 	// +optional
-	secret *Secret,
+	secret *dagger.Secret,
 	// skip opinionated ublue-way of setting up signing config
 	//   note: if basing off of ublue, this is already setup,
 	//         but not for the source image
@@ -156,7 +157,7 @@ func (ft *FedoraToolbox) PublishAndSign(
 	username string,
 	// registry auth password/secret
 	// +optional
-	secret *Secret,
+	secret *dagger.Secret,
 	// skip opinionated ublue-way of setting up signing config
 	//   note: if basing off of ublue, this is already setup,
 	//         but not for the source image
@@ -176,12 +177,12 @@ func (ft *FedoraToolbox) PublishAndSign(
 	// +default=false
 	skipDefaultTags bool,
 	// Cosign private key
-	cosignPrivateKey Secret,
+	cosignPrivateKey dagger.Secret,
 	// Cosign password
-	cosignPassword Secret,
+	cosignPassword dagger.Secret,
 	// Docker config
 	//+optional
-	dockerConfig *File,
+	dockerConfig *dagger.File,
 	// Cosign container image to be used to sign the digests
 	// +optional
 	// +default="chainguard/cosign:latest"
@@ -210,7 +211,7 @@ func (ft *FedoraToolbox) PublishAndSign(
 		return nil, err
 	}
 
-	opts := CosignSignOpts{
+	opts := dagger.CosignSignOpts{
 		// Should never be nil due to Dagger setting default values
 		CosignImage: *cosignImage,
 		CosignUser:  *cosignUser,

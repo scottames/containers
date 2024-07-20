@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"dagger/atomic/internal/dagger"
 	"fmt"
 	"strings"
 )
@@ -21,7 +22,7 @@ func (a *Atomic) publish(
 	username string,
 	// registry auth password/secret
 	// +optional
-	secret *Secret,
+	secret *dagger.Secret,
 	// additional tags to publish in addition to the default tags
 	// default tags will be included unless skipDefaultTags is set:
 	//  [majorVersion, majorVersion-date, date]
@@ -83,6 +84,8 @@ func (a *Atomic) publish(
 		tags = append(tags, a.Tags...)
 	}
 
+	// TODO: better to  do this similar to multi-stage passing multiple
+	// containers to publish?
 	for _, tag := range tags {
 		digest, err := ctr.Publish(
 			ctx,
@@ -112,7 +115,7 @@ func (a *Atomic) Publish(
 	username string,
 	// registry auth password/secret
 	// +optional
-	secret *Secret,
+	secret *dagger.Secret,
 	// additional tags to publish in addition to the default tags
 	// default tags will be included unless skipDefaultTags is set:
 	//  [majorVersion, majorVersion-date, date]
@@ -172,7 +175,7 @@ func (a *Atomic) PublishAndSign(
 	username string,
 	// registry auth password/secret
 	// +optional
-	secret *Secret,
+	secret *dagger.Secret,
 	// additional tags to publish in addition to the default tags
 	// default tags will be included unless skipDefaultTags is set:
 	//  [majorVersion, majorVersion-date, date]
@@ -197,12 +200,12 @@ func (a *Atomic) PublishAndSign(
 	// +default=false
 	skipDefaultTags bool,
 	// Cosign private key
-	cosignPrivateKey Secret,
+	cosignPrivateKey dagger.Secret,
 	// Cosign password
-	cosignPassword Secret,
+	cosignPassword dagger.Secret,
 	// Docker config
 	//+optional
-	dockerConfig *File,
+	dockerConfig *dagger.File,
 	// Cosign container image to be used to sign the digests
 	// +optional
 	// +default="chainguard/cosign:latest"
@@ -228,7 +231,7 @@ func (a *Atomic) PublishAndSign(
 		return nil, err
 	}
 
-	opts := CosignSignOpts{
+	opts := dagger.CosignSignOpts{
 		// Should never be nil due to Dagger setting default values
 		CosignImage: *cosignImage,
 		CosignUser:  *cosignUser,

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"dagger/atomic/internal/dagger"
 	"fmt"
 )
 
@@ -106,8 +107,8 @@ var (
 // fedoraAtomic defines the custom Fedora Atomic container image
 //
 // the container and publish functions both refer to this as their source
-func (a *Atomic) fedoraAtomic(ctx context.Context) (*Fedora, error) {
-	scriptsPost := []*File{}
+func (a *Atomic) fedoraAtomic(ctx context.Context) (*dagger.Fedora, error) {
+	scriptsPost := []*dagger.File{}
 	for _, script := range scriptsPostPackageInstall {
 		scriptsPost = append(scriptsPost, a.Source.File(
 			fmt.Sprintf(
@@ -117,7 +118,7 @@ func (a *Atomic) fedoraAtomic(ctx context.Context) (*Fedora, error) {
 		))
 	}
 
-	opts := FedoraOpts{
+	opts := dagger.FedoraOpts{
 		Registry: a.Registry,
 		Org:      a.Org,
 		Tag:      a.Tag,
@@ -140,7 +141,7 @@ func (a *Atomic) fedoraAtomic(ctx context.Context) (*Fedora, error) {
 	a.ReleaseVersion = version
 
 	a.Tags, err = fedora.DefaultTags(ctx,
-		FedoraDefaultTagsOpts{Latest: latestFedoraVersion == version},
+		dagger.FedoraDefaultTagsOpts{Latest: latestFedoraVersion == version},
 	)
 	if err != nil {
 		return nil, err
