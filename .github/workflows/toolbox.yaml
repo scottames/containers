@@ -9,12 +9,14 @@ on:
     paths:
       - toolbox/**.go
       - toolbox/go.*
+      - toolbox/**/dagger.json
       - .github/workflows/toolbox.yaml
       - .github/workflows/reusable-toolbox.yaml
   pull_request:
     paths:
       - toolbox/**.go
       - toolbox/go.*
+      - toolbox/**/dagger.json
       - .github/workflows/toolbox.yaml
       - .github/workflows/reusable-toolbox.yaml
   # yamllint disable-line rule:empty-values
