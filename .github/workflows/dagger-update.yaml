@@ -9,6 +9,12 @@ on:
       - "**/dagger.json"
     branches:
       - renovate/*
+  workflow_dispatch:
+    inputs:
+      go-updates:
+        type: boolean
+        default: false
+        description: Toggle enabling golang updates
 jobs:
   dagger-update:
     name: Update Dagger Modules
@@ -59,12 +65,13 @@ jobs:
           aqua_version: v2.30.0 # renovate: depName=aquaproj/aqua
         env:
           AQUA_GITHUB_TOKEN: ${{ steps.generate_app_token.outputs.token }}
+          # yamllint disable-line rule:line-length
       - uses: kevincobain2000/action-gobrew@e6b1116c09b28a0e20a753384c90bb7fa95ec198 # v2
         with:
           version: 1.22.4 # renovate: datasource=golang-version depName=go
       - name: dagger develop
         run: |
-          just develop
+          just goUpdates=${{ inputs.go-updates }} develop
       - name: ghcp push changes
         if: "! github.event.pull_request.head.repo.fork"
         env:
