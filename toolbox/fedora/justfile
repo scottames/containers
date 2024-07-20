@@ -1,6 +1,6 @@
 # evaluate the container
 [no-exit-message]
-fedora-toolbox-container :
+fedora-toolbox-container args="":
   dagger \
     --progress={{ progress }} \
     call \

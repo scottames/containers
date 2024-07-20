@@ -22,7 +22,10 @@ var (
 		"xclip",
 		"xdg-open",
 	}
-	labels = map[string]string{
+	// renovate: datasource=github-releases depName=danielmiessler/fabric
+	fabricVersion = "1.4.0"
+	fabricGit     = "git+https://github.com/danielmiessler/fabric.git"
+	labels        = map[string]string{
 		"usage":   "This image is meant to be used with the toolbox or distrobox command",
 		"summary": "A cloud-native terminal experience powered by Fedora",
 
@@ -94,6 +97,10 @@ var (
 		"zenity",
 		"zip",
 		"zsh",
+
+		// for fabric: https://github.com/danielmiessler/fabric
+		"gcc-c++",
+		"python3-devel",
 
 		"https://s3.amazonaws.com/session-manager-downloads/plugin/latest/linux_64bit/session-manager-plugin.rpm",
 	}
@@ -196,6 +203,10 @@ func (ft *FedoraToolbox) Container(ctx context.Context) (*Container, error) {
 		WithFile("/usr/bin/host-spawn", hostSpawn,
 			ContainerWithFileOpts{Permissions: 0755, Owner: "root"},
 		).
+		WithExec([]string{
+			"pipx", "install", "--global",
+			fmt.Sprintf("%s@%s", fabricGit, fabricVersion),
+		}).
 		WithExec([]string{"dnf", "clean", "all"})
 
 	return ctr, nil
