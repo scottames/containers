@@ -92,8 +92,28 @@ init module:
 [no-exit-message]
 install target module:
   pushd {{ target }}
-  dagger install ../{{ module }}
+  dagger install {{ module }}
   popd
+
+update-scottames-daggerverse version mod="":
+  #!/usr/bin/env bash
+  _DAGGER_MODS="{{ mod }}"
+  if [[ -z "${_DAGGER_MODS}" ]]; then
+    mapfile -t _DAGGER_MODS < <(find . -type f -name dagger.json -print0 | xargs -0 dirname)
+  fi
+
+  for _DAGGER_MOD in "${_DAGGER_MODS[@]}"; do
+    echo "=> ${_DAGGER_MOD}"
+    pushd "${_DAGGER_MOD}"
+    for mod_to_update in $( dagger config --silent --json \
+      | jq -r '.dependencies | .[].source' | grep 'scottames/daggerverse' \
+      | cut -d'@' -f1)
+    do
+      echo "=> update: ${mod_to_update}"
+      dagger install "${mod_to_update}@{{ version }}"
+    done
+    popd
+  done
 
 import 'atomic/justfile'
 import 'toolbox/fedora/justfile'
