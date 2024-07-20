@@ -81,7 +81,7 @@ develop mod="":
 [no-exit-message]
 init module:
   #!/usr/bin/env bash
-  set -euxo pipefail
+  set -euo pipefail
   test ! -d {{module}} \
   || (echo "Module \"{{module}}\" already exists" && exit 1)
 
@@ -97,13 +97,14 @@ install target module:
 
 update-scottames-daggerverse version mod="":
   #!/usr/bin/env bash
+  set -euo pipefail
   _DAGGER_MODS="{{ mod }}"
   if [[ -z "${_DAGGER_MODS}" ]]; then
     mapfile -t _DAGGER_MODS < <(find . -type f -name dagger.json -print0 | xargs -0 dirname)
   fi
 
   for _DAGGER_MOD in "${_DAGGER_MODS[@]}"; do
-    echo "=> ${_DAGGER_MOD}"
+    echo "=> ${_DAGGER_MOD} @ {{ version }}"
     pushd "${_DAGGER_MOD}"
     for mod_to_update in $( dagger config --silent --json \
       | jq -r '.dependencies | .[].source' | grep 'scottames/daggerverse' \
