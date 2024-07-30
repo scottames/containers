@@ -14,7 +14,7 @@ on:
       go-updates:
         type: boolean
         default: false
-        description: Toggle enabling golang updates
+        description: enable golang updates
 jobs:
   dagger-update:
     name: Update Dagger Modules
@@ -48,41 +48,52 @@ jobs:
           steps.generate_app_token.outputs.token_type == 'empty'
           && ! github.event.pull_request.head.repo.fork
         with:
+          policy_allow: "true"
           aqua_version: v2.30.0 # renovate: depName=aquaproj/aqua
         env:
           AQUA_GITHUB_TOKEN: ${{ github.token }}
-          # yamllint disable-line rule:line-length
+      # yamllint disable-line rule:line-length
       - name: install aquas (using generated app token)
         # yamllint disable-line rule:line-length
         uses: aquaproj/aqua-installer@6ce1f8848ec8e61f14d57bd5d7597057a6dd187c # v3.0.1
         if: |
           steps.generate_app_token.outputs.token_type != 'empty'
           && ! github.event.pull_request.head.repo.fork
-        # Install ghcp
         with:
+          policy_allow: "true"
           aqua_version: v2.30.0 # renovate: depName=aquaproj/aqua
         env:
           AQUA_GITHUB_TOKEN: ${{ steps.generate_app_token.outputs.token }}
-          # yamllint disable-line rule:line-length
+      # yamllint disable-line rule:line-length
       - uses: kevincobain2000/action-gobrew@e6b1116c09b28a0e20a753384c90bb7fa95ec198 # v2
         with:
           version: 1.22.5 # renovate: datasource=golang-version depName=go
       - name: dagger develop
         run: |
           just goUpdates=${{ inputs.go-updates }} develop
-      - name: ghcp push changes
+      - name: push changes with ghcp
         if: "! github.event.pull_request.head.repo.fork"
         env:
-          GITHUB_REPOSITORY: ${{github.event.repository.name}}
-          GITHUB_TOKEN: ${{steps.generate_app_token.outputs.token}}
+          GITHUB_REPOSITORY: ${{ github.event.repository.name }}
+          GITHUB_TOKEN: ${{ steps.generate_app_token.outputs.token }}
         run: |
+          set -eu
+          if ! ghcp -v; then
+            echo "::error ::int128/ghcp not found - needed to push."
+            exit 1
+          fi
           branch=${GITHUB_HEAD_REF:-} # https://github.com/int128/ghcp
           if [ -z "${branch}" ]; then
             branch="${GITHUB_REF_NAME}"
           fi
+          GO_UPDATES_STR=""
+          if [ "${{ inputs.go-updates }}" = "true" ]; then
+            GO_UPDATES_STR=" + related golang updates"
+          fi
           # shellcheck disable=SC2046
           # ^- we want it to split!
           ghcp commit -r "$GITHUB_REPOSITORY" -b "${branch}" \
-            -m "chore(dagger): develop" \
+            -m "chore(dagger): develop${GO_UPDATES_STR}" \
             $(git --no-pager diff --name-only)
+            echo "::notice ::changes pushed to branch, 'exit 1' to force checks"
           exit 1
