@@ -11,16 +11,19 @@ on:
       - renovate/*
   workflow_dispatch:
     inputs:
+      #checkov:skip=CKV_GHA_7:desired to affect output to affect the build in this case
       go-updates:
         type: boolean
         default: false
         description: enable golang updates
+permissions:
+  contents: read # required for actions/checkout
 jobs:
   dagger-update:
     name: Update Dagger Modules
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write # allow workflow to write to PR
     steps:
       - name: checkout
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
@@ -35,8 +38,8 @@ jobs:
         # yamllint disable-line rule:line-length
         uses: suzuki-shunsuke/github-token-action@350d7506222e3a0016491abe85b5c4dd475b67d1 # v0.2.1
         with:
-          github_app_id: ${{secrets.GH_APP_ID}}
-          github_app_private_key: ${{secrets.GH_APP_PRIVATE_KEY}}
+          github_app_id: ${{ secrets.GH_APP_ID }}
+          github_app_private_key: ${{ secrets.GH_APP_PRIVATE_KEY }}
           github_app_permissions: >-
             { "contents": "write" }
           github_app_repositories: >-
@@ -67,10 +70,10 @@ jobs:
       # yamllint disable-line rule:line-length
       - uses: kevincobain2000/action-gobrew@e6b1116c09b28a0e20a753384c90bb7fa95ec198 # v2
         with:
-          version: 1.22.5 # renovate: datasource=golang-version depName=go
+          version: 1.22.4 # renovate: datasource=golang-version depName=go
       - name: dagger develop
         run: |
-          just goUpdates=${{ inputs.go-updates }} develop
+          just goUpdates="${{ inputs.go-updates }}" develop
       - name: push changes with ghcp
         if: "! github.event.pull_request.head.repo.fork"
         env:
@@ -78,10 +81,12 @@ jobs:
           GITHUB_TOKEN: ${{ steps.generate_app_token.outputs.token }}
         run: |
           set -eu
+
           if ! ghcp -v; then
             echo "::error ::int128/ghcp not found - needed to push."
             exit 1
           fi
+
           branch=${GITHUB_HEAD_REF:-} # https://github.com/int128/ghcp
           if [ -z "${branch}" ]; then
             branch="${GITHUB_REF_NAME}"

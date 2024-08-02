@@ -15,7 +15,12 @@ _default:
 # run go updates for the given project (USE WITH CAUTION)
 go-update project version="latest":
     #!/usr/bin/env bash
+    echo "=> go update: {{ project }}"
     pushd "{{ project }}" >/dev/null || exit 1
+    if [[ ! -f "go.mod" ]]; then
+      echo "‼️ ERROR: no go.mod in {{ project }}"
+      exit 1
+    fi
     [ -x "$(command -v gobrew)" ] || exit 1
     gobrew use "{{ version }}"
     # remove the go version, let the mod update it
@@ -49,12 +54,15 @@ go-work target="":
 # run `dagger develop` for all Dagger modules, or the given module
 develop mod="":
     #!/usr/bin/env bash
+    set -e
     _DAGGER_MODS="{{ mod }}"
     if [[ -z "${_DAGGER_MODS}" ]]; then
       mapfile -t _DAGGER_MODS < <(find . -type f -name dagger.json -print0 | xargs -0 dirname)
     fi
 
     for _DAGGER_MOD in "${_DAGGER_MODS[@]}"; do
+      echo "=> ${_DAGGER_MOD}: dagger develop"
+
       pushd "${_DAGGER_MOD}" >/dev/null || exit
       _DAGGER_MOD_SOURCE="$(dagger config --silent --json | jq -r '.source')"
 
@@ -62,11 +70,11 @@ develop mod="":
       # Dagger is opinionated about the go version compatibility. It will barf
       # if the go version is greater than supported
       if [[ "{{ goUpdates }}" = "true" ]]; then
-        echo "=> ${_DAGGER_MOD}: go update"
-        just -f "{{ gitRoot }}/justfile" go-update "${_DAGGER_MOD}"
+        _DAGGER_GO_MOD="${_DAGGER_MOD}/${_DAGGER_MOD_SOURCE}"
+        echo "=> ${_DAGGER_GO_MOD}: go update"
+        just -f "{{ gitRoot }}/justfile" go-update "${_DAGGER_GO_MOD}"
       fi
 
-      echo "=> ${_DAGGER_MOD}: dagger develop"
       dagger develop
 
       # remove generated bits we don't want
@@ -76,6 +84,7 @@ develop mod="":
 
       popd >/dev/null || exit 1
     done
+    echo "=> dagger-develop: done"
 
 # initialize a new Dagger module
 [no-exit-message]
