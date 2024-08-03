@@ -32,10 +32,6 @@ var (
 		"ibm-plex-mono-fonts",
 		"iotop",
 		"jetbrains-mono-fonts-all",
-		"kitty",
-		"kitty-doc",
-		"kitty-shell-integration",
-		"kitty-terminfo",
 		"langpacks-en",
 		"libadwaita",
 		"lm_sensors", // required by freon gnome-ext
