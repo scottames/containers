@@ -1,0 +1,44 @@
+{
+  "checksums": [
+    {
+      "id": "github_release/github.com/casey/just/1.34.0/just-1.34.0-aarch64-unknown-linux-musl.tar.gz",
+      "checksum": "6A86CC20BE1C58B3A613D6DAF9DA922ADC9DCFB578C0F2C73F0CFF352AA14137",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/casey/just/1.34.0/just-1.34.0-x86_64-unknown-linux-musl.tar.gz",
+      "checksum": "42DF46F7CE727BDB2C3B5357017D885BD2033E8DBB154CA8E8F229E75093AECA",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/dagger/dagger/v0.12.4/dagger_v0.12.4_linux_amd64.tar.gz",
+      "checksum": "8D842F38F90B463AB3C8157B7633FD3FBE55FFAA939303A9EA82C968E967DEAD",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/dagger/dagger/v0.12.4/dagger_v0.12.4_linux_arm64.tar.gz",
+      "checksum": "5CB81FC3B46E55FA36D318A2501E48147E6B670C5902D113A40AFAB9CC4E3ADB",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/int128/ghcp/v1.13.3/ghcp_linux_amd64.zip",
+      "checksum": "8B3A1F25A9A5E69CB6306EE88F92D4BB931D343AD1E907FC5DC67491D3985EA4",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/kevincobain2000/gobrew/v1.10.9/gobrew-linux-amd64",
+      "checksum": "FDB28F3A807BD12C4350166A4D809F26550232FF116B159D9A738A003885BC5F",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/kevincobain2000/gobrew/v1.10.9/gobrew-linux-arm64",
+      "checksum": "B22368E118F3218FEA7353726CB8C6CE288673299FA13359E2A2605272D915D6",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "registries/github_content/github.com/aquaproj/aqua-registry/v4.212.0/registry.yaml",
+      "checksum": "476F33AAD5560F5A057DCBF4F547FD8440CFE1D6318F02FAF322FA3BA43E035D",
+      "algorithm": "sha256"
+    }
+  ]
+}
