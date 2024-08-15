@@ -32,7 +32,9 @@ jobs:
       matrix:
         org: [ublue-os]
         registry: [ghcr.io]
-        variant: [silverblue]
+        variant:
+          - silverblue
+          - kinoite
         suffix:
           - main
           - nvidia
