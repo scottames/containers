@@ -85,14 +85,27 @@ func (a *Atomic) fedoraAtomic(ctx context.Context) (*dagger.Fedora, error) {
 	// Fedora is derived from the installed dagger module dependency
 	return fedora.
 			WithDescription(description).
-			WithDirectory("/usr", a.Source.Directory("atomic/files/usr")).
-			WithReposFromUrls(reposForImage, true).
+			WithDirectory(
+				"/usr",
+				a.Source.Directory("atomic/files/usr"),
+			).
 			// true => keep repo in final image
-			WithReposFromUrls(reposForBuild, false).
+			WithReposFromUrls(reposForImage, true).
 			// false => delete repo file in final image
-			WithPackagesInstalled(packagesInstalled).
-			WithPackagesRemoved(packagesRemoved).
-			WithExecScripts(scriptsPost, false).          // false => post package install
-			WithExec([]string{"update-ca-trust"}, false), // false => post package install
+			WithReposFromUrls(reposForBuild, false).
+			WithPackagesInstalled(
+				a.getPackageListFrom(packagesInstalled),
+			).
+			WithPackagesRemoved(
+				a.getPackageListFrom(packagesRemoved),
+			).
+			WithExecScripts(
+				scriptsPost,
+				false, // false => post package install
+			).
+			WithExec(
+				[]string{"update-ca-trust"},
+				false, // false => post package install
+			),
 		nil
 }
