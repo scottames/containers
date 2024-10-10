@@ -1,13 +1,13 @@
 {
   "checksums": [
     {
-      "id": "github_release/github.com/casey/just/1.35.0/just-1.35.0-aarch64-unknown-linux-musl.tar.gz",
-      "checksum": "A94C75426239FCE8C1E7FDFCCD20D60D987924F91AC45C843A14CD72D4D71E73",
+      "id": "github_release/github.com/casey/just/1.36.0/just-1.36.0-aarch64-unknown-linux-musl.tar.gz",
+      "checksum": "BB3886B15E2CBCB9C0EB19956297D36DE4EAEF45B89D3F5FA5D1FC4ED3B5B51D",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/casey/just/1.35.0/just-1.35.0-x86_64-unknown-linux-musl.tar.gz",
-      "checksum": "C4172306E241BD175C07316156A610593FA2B687AC49418520A375605D7CEAD4",
+      "id": "github_release/github.com/casey/just/1.36.0/just-1.36.0-x86_64-unknown-linux-musl.tar.gz",
+      "checksum": "BC7C9F377944F8DE9CD0418B11D2955ADEBFA25A488C0B5E3DD2D2C0E9D732DA",
       "algorithm": "sha256"
     },
     {
@@ -36,8 +36,8 @@
       "algorithm": "sha256"
     },
     {
-      "id": "registries/github_content/github.com/aquaproj/aqua-registry/v4.226.0/registry.yaml",
-      "checksum": "E374B1523B5A83257BC3C424869206F598CE92539C80BD16BD3D8DB0FC7FD1AF0A43EA324C31916BED61896B2924F92117EF47834954C062DE0E058B211920B7",
+      "id": "registries/github_content/github.com/aquaproj/aqua-registry/v4.231.0/registry.yaml",
+      "checksum": "4E7E077C2B412092A6E11952EF6F423A09D130FE6D218B0D35B5A076B2A1EADF9499464E04662B99B9D43F5C41703D982BA8C5CE16F0D824C941974E1A23C4B3",
       "algorithm": "sha512"
     }
   ]
