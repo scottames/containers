@@ -11,9 +11,9 @@ WEZTERM_FILENAME="wezterm-${WEZTERM_RELEASE_UNDERSCORE}-1.fedora${FEDORA_RELEASE
 TMP_DIR=$(mktemp -d)
 pushd "${TMP_DIR}"
 
-if [[ "${FEDORA_RELEASE}" = "40" ]]; then
+if [[ "${FEDORA_RELEASE}" -ge "40" ]]; then
 
-  WEZTERM_FILENAME="wezterm-nightly-fedora${FEDORA_RELEASE}.rpm"
+  WEZTERM_FILENAME="wezterm-nightly-fedora40.rpm"
   curl -fsSL -O \
     "https://github.com/wez/wezterm/releases/download/nightly/${WEZTERM_FILENAME}"
 
