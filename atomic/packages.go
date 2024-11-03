@@ -31,6 +31,7 @@ func sliceStringProduct(ss []string) [][]string {
 const (
 	All        = "all"
 	Main       = "main"
+	Niri       = "niri"
 	Nvidia     = "nvidia"
 	Kinoite    = "kinoite"
 	Silverblue = "silverblue"
@@ -39,7 +40,8 @@ const (
 var (
 	reposForBuild = []string{ // will not be kept in final image
 		// TODO: match fedora version (when available, 40 returns 404)
-		"https://pkgs.tailscale.com/stable/fedora/39/tailscale.repo",
+		"https://pkgs.tailscale.com/stable/fedora/tailscale.repo",
+		"https://copr.fedorainfracloud.org/coprs/yalter/niri/repo/fedora-FEDORA_MAJOR_VERSION/yalter-niri-fedora-FEDORA_MAJOR_VERSION.repo",
 	}
 	reposForImage = []string{
 		"https://repo.vivaldi.com/stable/vivaldi-fedora.repo", // Layering for now...
@@ -61,6 +63,16 @@ var (
 		},
 	}
 	packagesInstalled = map[string]map[string][]string{
+		Niri: {
+			All: {
+				"mako",
+				"niri",
+				"rofi-wayland",
+				"swaybg",
+				"swaylock",
+				"waybar",
+			},
+		},
 		Kinoite: {
 			All: {
 				"skanpage",
