@@ -67,6 +67,7 @@ var (
 			All: {
 				"mako",
 				"niri",
+				"pavucontrol",
 				"rofi-wayland",
 				"swaybg",
 				"swaylock",
