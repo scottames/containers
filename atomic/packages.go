@@ -42,6 +42,7 @@ var (
 		// TODO: match fedora version (when available, 40 returns 404)
 		"https://pkgs.tailscale.com/stable/fedora/tailscale.repo",
 		"https://copr.fedorainfracloud.org/coprs/yalter/niri/repo/fedora-FEDORA_MAJOR_VERSION/yalter-niri-fedora-FEDORA_MAJOR_VERSION.repo",
+		"https://copr.fedorainfracloud.org/coprs/tofik/nwg-shell/repo/fedora-FEDORA_MAJOR_VERSION/tofik-nwg-shell-fedora-FEDORA_MAJOR_VERSION.repo",
 	}
 	reposForImage = []string{
 		"https://repo.vivaldi.com/stable/vivaldi-fedora.repo", // Layering for now...
@@ -67,6 +68,7 @@ var (
 			All: {
 				"mako",
 				"niri",
+				"nwg-look",
 				"pavucontrol",
 				"rofi-wayland",
 				"swaybg",
