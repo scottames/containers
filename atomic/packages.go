@@ -72,6 +72,7 @@ var (
 				"pavucontrol",
 				"rofi-wayland",
 				"swaybg",
+				"swayidle",
 				"swaylock",
 				"waybar",
 			},
