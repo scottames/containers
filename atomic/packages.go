@@ -66,6 +66,7 @@ var (
 	packagesInstalled = map[string]map[string][]string{
 		Niri: {
 			All: {
+				"gnome-keyring",
 				"mako",
 				"niri",
 				"nwg-look",
@@ -75,6 +76,8 @@ var (
 				"swayidle",
 				"swaylock",
 				"waybar",
+				"xdg-desktop-portal-gnome",
+				"xdg-desktop-portal-gtk",
 			},
 		},
 		Kinoite: {
