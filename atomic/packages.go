@@ -111,6 +111,7 @@ var (
 				"jetbrains-mono-fonts-all",
 				"langpacks-en",
 				"libadwaita",
+				"light",
 				"lm_sensors", // required by freon gnome-ext
 				"mozilla-fira-fonts-common",
 				"mozilla-fira-mono-fonts",
