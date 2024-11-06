@@ -76,6 +76,7 @@ var (
 				"swayidle",
 				"swaylock",
 				"waybar",
+				"wlogout",
 				"xdg-desktop-portal-gnome",
 				"xdg-desktop-portal-gtk",
 			},
