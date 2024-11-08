@@ -67,6 +67,10 @@ var (
 		Niri: {
 			All: {
 				"gnome-keyring",
+				"hypridle",
+				"hyprlock",
+				"hyprpaper",
+				"hyprpicker",
 				"mako",
 				"niri",
 				"nwg-look",
