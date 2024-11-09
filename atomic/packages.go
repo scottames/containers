@@ -76,6 +76,7 @@ var (
 				"nwg-look",
 				"pavucontrol",
 				"rofi-wayland",
+				"rofimoji",
 				"swaybg",
 				"swayidle",
 				"swaylock",
