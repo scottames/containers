@@ -35,6 +35,7 @@ jobs:
         variant:
           - silverblue
           - kinoite
+          - niri
         suffix:
           - main
           - nvidia

@@ -45,6 +45,13 @@ func (a *Atomic) fedoraAtomic(ctx context.Context) (*dagger.Fedora, error) {
 		Tag:      a.Tag,
 		Variant:  a.Variant,
 	}
+
+	// Niri is Silverblue-based - it should be labeled Niri,
+	//  but pulled from Silverblue
+	if opts.Variant == Niri {
+		opts.Variant = Silverblue
+	}
+
 	if a.Suffix != nil {
 		opts.Suffix = *a.Suffix
 	}
@@ -82,6 +89,18 @@ func (a *Atomic) fedoraAtomic(ctx context.Context) (*dagger.Fedora, error) {
 		fedora = fedora.WithDescription(description)
 	}
 
+	finalReposForBuild := replaceStringInSlice(
+		reposForBuild,
+		"FEDORA_MAJOR_VERSION",
+		version,
+	)
+
+	finalReposForImage := replaceStringInSlice(
+		reposForImage,
+		"FEDORA_MAJOR_VERSION",
+		version,
+	)
+
 	// Fedora is derived from the installed dagger module dependency
 	return fedora.
 			WithDescription(description).
@@ -90,9 +109,9 @@ func (a *Atomic) fedoraAtomic(ctx context.Context) (*dagger.Fedora, error) {
 				a.Source.Directory("atomic/files/usr"),
 			).
 			// true => keep repo in final image
-			WithReposFromUrls(reposForImage, true).
+			WithReposFromUrls(finalReposForImage, true).
 			// false => delete repo file in final image
-			WithReposFromUrls(reposForBuild, false).
+			WithReposFromUrls(finalReposForBuild, false).
 			WithPackagesInstalled(
 				a.getPackageListFrom(packagesInstalled),
 			).
