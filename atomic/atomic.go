@@ -4,7 +4,6 @@ import (
 	"context"
 	"dagger/atomic/internal/dagger"
 	"fmt"
-	"strings"
 )
 
 const (
@@ -47,6 +46,8 @@ func (a *Atomic) fedoraAtomic(ctx context.Context) (*dagger.Fedora, error) {
 		Variant:  a.Variant,
 	}
 
+	// Niri is Silverblue-based - it should be labeled Niri,
+	//  but pulled from Silverblue
 	if opts.Variant == Niri {
 		opts.Variant = Silverblue
 	}
@@ -88,13 +89,13 @@ func (a *Atomic) fedoraAtomic(ctx context.Context) (*dagger.Fedora, error) {
 		fedora = fedora.WithDescription(description)
 	}
 
-	finalReposForBuild := a.reposReplaceString(
+	finalReposForBuild := replaceStringInSlice(
 		reposForBuild,
 		"FEDORA_MAJOR_VERSION",
 		version,
 	)
 
-	finalReposForImage := a.reposReplaceString(
+	finalReposForImage := replaceStringInSlice(
 		reposForImage,
 		"FEDORA_MAJOR_VERSION",
 		version,
@@ -126,15 +127,4 @@ func (a *Atomic) fedoraAtomic(ctx context.Context) (*dagger.Fedora, error) {
 				false, // false => post package install
 			),
 		nil
-}
-
-func (*Atomic) reposReplaceString(ss []string, replace string, with string) []string {
-	result := []string{}
-	for _, r := range ss {
-		result = append(result, strings.Replace(
-			r, replace, with, -1),
-		)
-	}
-
-	return result
 }
