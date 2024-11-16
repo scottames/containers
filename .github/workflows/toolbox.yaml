@@ -23,6 +23,12 @@ on:
   workflow_dispatch:
 jobs:
   fedora_toolbox:
+    strategy:
+      fail-fast: false
+      matrix:
+        release:
+          - version: 41
+            latest: true
     name: fedora-toolbox
     uses: ./.github/workflows/reusable-toolbox.yaml
     secrets: inherit
@@ -33,4 +39,5 @@ jobs:
     with:
       module: toolbox/fedora
       image_name: fedora-toolbox
-      version: 40
+      version: ${{ matrix.release.version }}
+      latest: ${{ matrix.release.latest }}

@@ -11,6 +11,11 @@ on:
         description: Name of the output image
         required: true
         type: string
+      latest:
+        description: Toggle latest tag
+        required: false
+        default: false
+        type: boolean
       version:
         description: The container image version
         required: true
@@ -23,8 +28,6 @@ jobs:
       contents: read
       packages: write
       id-token: write
-    strategy:
-      fail-fast: false
     env:
       IMAGE_NAME: ${{ inputs.image_name }}
     steps:
@@ -58,7 +61,7 @@ jobs:
           module: ${{ inputs.module }}
           cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
           # yamllint disable-line rule:line-length
-          args: publish-and-sign  --registry="ghcr.io"  --image-name="${{ env.IMAGE_NAME }}"  --username="${{ github.repository_owner }}"  --secret=env:GITHUB_TOKEN  --additional-tags="pr-${{ github.event.number }}-${{ inputs.version}},pr-${{ github.event.number }}-${{ inputs.version}}-${{ steps.sha_short.outputs.sha_short }}"  --skip-default-tags  --cosign-private-key=env:COSIGN_PRIVATE_KEY  --cosign-password=env:COSIGN_PASSWORD
+          args: --tag "${{ inputs.version }}" publish-and-sign  --registry="ghcr.io"  --image-name="${{ env.IMAGE_NAME }}"  --username="${{ github.repository_owner }}"  --secret=env:GITHUB_TOKEN  --additional-tags="pr-${{ github.event.number }}-${{ inputs.version}},pr-${{ github.event.number }}-${{ inputs.version}}-${{ steps.sha_short.outputs.sha_short }}"  --skip-default-tags  --cosign-private-key=env:COSIGN_PRIVATE_KEY  --cosign-password=env:COSIGN_PASSWORD
       - name: Dagger Build and Publish (main)
         # yamllint disable-line rule:line-length
         uses: dagger/dagger-for-github@ad6a4e308a42fb2cf9be8b060f9aba9d57d4c9aa # v6
@@ -77,4 +80,4 @@ jobs:
           module: ${{ inputs.module }}
           cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
           # yamllint disable-line rule:line-length
-          args: publish-and-sign  --registry="ghcr.io"  --image-name="${{ env.IMAGE_NAME }}"   --latest --username="${{ github.repository_owner }}"  --secret=env:GITHUB_TOKEN  --cosign-private-key=env:COSIGN_PRIVATE_KEY  --cosign-password=env:COSIGN_PASSWORD
+          args: --tag "${{ inputs.version }}" publish-and-sign  --registry="ghcr.io"  --image-name="${{ env.IMAGE_NAME }}" ${{ inputs.latest && '--latest' || '' }} --username="${{ github.repository_owner }}"  --secret=env:GITHUB_TOKEN  --cosign-private-key=env:COSIGN_PRIVATE_KEY  --cosign-password=env:COSIGN_PASSWORD

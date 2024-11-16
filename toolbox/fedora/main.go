@@ -23,10 +23,7 @@ var (
 		"xclip",
 		"xdg-open",
 	}
-	// renovate: datasource=github-releases depName=danielmiessler/fabric
-	fabricVersion = "1.4.0"
-	fabricGit     = "git+https://github.com/danielmiessler/fabric.git"
-	labels        = map[string]string{
+	labels = map[string]string{
 		"usage":   "This image is meant to be used with the toolbox or distrobox command",
 		"summary": "A cloud-native terminal experience powered by Fedora",
 
@@ -36,7 +33,7 @@ var (
 		"https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-%s.noarch.rpm",
 		"https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-%s.noarch.rpm",
 	}
-	packageGroups = []string{"Development Tools"}
+	packageGroups = []string{"development-tools"}
 	packages      = []string{
 		"adw-gtk3-theme",
 		"awscli",
@@ -135,8 +132,6 @@ func New(
 	// +optional
 	suffix *string,
 	// Tag or major release version
-	// +optional
-	// +default="40"
 	tag string,
 ) *FedoraToolbox {
 	return &FedoraToolbox{
@@ -204,10 +199,6 @@ func (ft *FedoraToolbox) Container(ctx context.Context) (*dagger.Container, erro
 		WithFile("/usr/bin/host-spawn", hostSpawn,
 			dagger.ContainerWithFileOpts{Permissions: 0755, Owner: "root"},
 		).
-		WithExec([]string{
-			"pipx", "install", "--global",
-			fmt.Sprintf("%s@%s", fabricGit, fabricVersion),
-		}).
 		WithExec([]string{"dnf", "clean", "all"})
 
 	return ctr, nil
