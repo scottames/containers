@@ -59,7 +59,7 @@ jobs:
             ${{ env.IMAGE_NAME }}
       - name: Dagger Build and Publish (PR)
         # yamllint disable-line rule:line-length
-        uses: dagger/dagger-for-github@ad6a4e308a42fb2cf9be8b060f9aba9d57d4c9aa # v6
+        uses: dagger/dagger-for-github@e5153f5610d82ac9f3f848f3a25ad9d696641068 # v7
         env:
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
@@ -81,7 +81,7 @@ jobs:
           args: --source=.  --registry="${{ matrix.registry }}"  --org="${{ matrix.org }}"  --variant="${{ matrix.variant }}"  --suffix="${{ matrix.suffix }}"  --tag="${{ matrix.version }}"  --additional-labels="$(printf "${{ steps.generate_labels.outputs.labels }}" | xargs -I {} echo -n \"{}\", | sed 's/,*$//' )"  publish-and-sign  --image-registry="ghcr.io"  --image-name="${{ env.IMAGE_NAME }}" --repository="containers" --username="${{ github.repository_owner }}"  --secret=env:GITHUB_TOKEN  --additional-tags="pr-${{ github.event.number }}-${{ matrix.version}},pr-${{ github.event.number }}-${{ matrix.version}}-${{ steps.sha_short.outputs.sha_short }}" --skip-default-tags --cosign-private-key=env:COSIGN_PRIVATE_KEY  --cosign-password=env:COSIGN_PASSWORD
       - name: Dagger Build and Publish (main)
         # yamllint disable-line rule:line-length
-        uses: dagger/dagger-for-github@ad6a4e308a42fb2cf9be8b060f9aba9d57d4c9aa # v6
+        uses: dagger/dagger-for-github@e5153f5610d82ac9f3f848f3a25ad9d696641068 # v7
         env:
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
