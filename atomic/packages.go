@@ -67,6 +67,7 @@ var (
 		Niri: {
 			All: {
 				"gnome-keyring",
+				"grim",
 				"hypridle",
 				"hyprlock",
 				"hyprpaper",
@@ -77,6 +78,7 @@ var (
 				"pavucontrol",
 				"rofi-wayland",
 				"rofimoji",
+				"slurp",
 				"swaybg",
 				"swayidle",
 				"swaylock",
