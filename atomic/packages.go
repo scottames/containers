@@ -76,6 +76,7 @@ var (
 				"niri",
 				"nwg-look",
 				"pavucontrol",
+				"polkit-kde",
 				"rofi-wayland",
 				"rofimoji",
 				"slurp",
