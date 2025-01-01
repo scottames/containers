@@ -42,6 +42,7 @@ var (
 		// TODO: match fedora version (when available, 40 returns 404)
 		"https://pkgs.tailscale.com/stable/fedora/tailscale.repo",
 		"https://copr.fedorainfracloud.org/coprs/yalter/niri/repo/fedora-FEDORA_MAJOR_VERSION/yalter-niri-fedora-FEDORA_MAJOR_VERSION.repo",
+		"https://copr.fedorainfracloud.org/coprs/pgdev/ghostty/repo/fedora-FEDORA_MAJOR_VERSION/pgdev-ghostty-fedora-FEDORA_MAJOR_VERSION.repo",
 		"https://copr.fedorainfracloud.org/coprs/tofik/nwg-shell/repo/fedora-FEDORA_MAJOR_VERSION/tofik-nwg-shell-fedora-FEDORA_MAJOR_VERSION.repo",
 	}
 	reposForImage = []string{
@@ -113,6 +114,7 @@ var (
 				"dbus-x11",
 				"firewall-config",
 				"fish",
+				"ghostty",
 				"google-droid-sans-fonts",
 				"google-droid-sans-mono-fonts",
 				"google-go-mono-fonts",
