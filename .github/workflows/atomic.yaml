@@ -34,7 +34,6 @@ jobs:
         registry: [ghcr.io]
         variant:
           - silverblue
-          - kinoite
           - niri
         suffix:
           - main

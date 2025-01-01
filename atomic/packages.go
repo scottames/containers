@@ -33,7 +33,6 @@ const (
 	Main       = "main"
 	Niri       = "niri"
 	Nvidia     = "nvidia"
-	Kinoite    = "kinoite"
 	Silverblue = "silverblue"
 )
 
@@ -89,17 +88,6 @@ var (
 				"wtype",
 				"xdg-desktop-portal-gnome",
 				"xdg-desktop-portal-gtk",
-			},
-		},
-		Kinoite: {
-			All: {
-				"skanpage",
-				"libadwaita-qt5",
-				"libadwaita-qt6",
-				"kde-runtime-docs",
-				"kdeplasma-addons",
-				"kdialog",
-				"plasma-wallpapers-dynamic",
 			},
 		},
 		All: {
