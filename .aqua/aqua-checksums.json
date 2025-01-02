@@ -26,6 +26,11 @@
       "algorithm": "sha256"
     },
     {
+      "id": "github_release/github.com/int128/ghcp/v1.13.5/ghcp_linux_arm64.zip",
+      "checksum": "14068BF35B2ED187EE7D8DB854DF2E7913C2BBC981979D3F8AE533D058E35F16",
+      "algorithm": "sha256"
+    },
+    {
       "id": "github_release/github.com/kevincobain2000/gobrew/v1.10.12/gobrew-linux-amd64",
       "checksum": "AF658BEBF4C4EDDE5647ACC198BE119C9F3A48FF64840A20C911B43988177907",
       "algorithm": "sha256"
@@ -36,8 +41,8 @@
       "algorithm": "sha256"
     },
     {
-      "id": "registries/github_content/github.com/aquaproj/aqua-registry/v4.274.0/registry.yaml",
-      "checksum": "B20E836C9AFD812580F641CE94B89D458F80E5BD97B83CF95ABE95CA8E3337133A88361923C3D61EAF4C9230760D64F57468385EC5C821DB78017CE1F23207D5",
+      "id": "registries/github_content/github.com/aquaproj/aqua-registry/v4.288.0/registry.yaml",
+      "checksum": "27EC1E6CC5F2F32930C2E4779DFF1CC8EB9DE39FAFE23A409DEECF30AB4F18811C30B0746A9719747A690E05D5E7231F3954B86C6ACBEAE7E95EFC7A8028A53E",
       "algorithm": "sha512"
     }
   ]
