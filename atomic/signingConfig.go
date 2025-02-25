@@ -17,10 +17,10 @@ func (a *Atomic) ctrSigningConfig(
   "image-ref": "ostree-image-signed:docker://%s/%s",
   "image-tag": "%s"
 }`, imageRegistry, imageName, imageVersion)
-	registriesD := fmt.Sprintf("/usr/etc/containers/registries.d/%s.yaml", imageName)
+	registriesD := fmt.Sprintf("/etc/containers/registries.d/%s.yaml", imageName)
 
 	yq := dag.Container().From("docker.io/mikefarah/yq")
-	cosignPubKeyPath := fmt.Sprintf("/usr/etc/pki/containers/%s.pub", imageName)
+	cosignPubKeyPath := fmt.Sprintf("/etc/pki/containers/%s.pub", imageName)
 
 	return ctr.
 		WithFile("/usr/bin/yq", yq.File("/usr/bin/yq")).
@@ -57,6 +57,6 @@ func (a *Atomic) ctrSigningConfig(
 }
 
 + .`, imageRegistry, repo, cosignPubKeyPath), // TODO: git repo instead
-			"/usr/etc/containers/policy.json",
+			"/etc/containers/policy.json",
 		})
 }
