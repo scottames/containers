@@ -1,7 +1,9 @@
 {
   "name": "fedora-toolbox",
-  "engineVersion": "v0.13.7",
-  "sdk": "go",
+  "engineVersion": "v0.16.2",
+  "sdk": {
+    "source": "go"
+  },
   "dependencies": [
     {
       "name": "cosign",
@@ -18,6 +20,5 @@
       "source": "github.com/scottames/daggerverse/fedora@8359122a7b90f2c8c6f3165570fdcbec6e923023",
       "pin": "8359122a7b90f2c8c6f3165570fdcbec6e923023"
     }
-  ],
-  "source": "."
+  ]
 }
