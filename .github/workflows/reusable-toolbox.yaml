@@ -38,14 +38,14 @@ jobs:
         run: echo "sha_short=${GITHUB_SHA::7}" >> "${GITHUB_OUTPUT}"
       - name: Docker Image Metadata From GitHub Repository
         # yamllint disable-line rule:line-length
-        uses: docker/metadata-action@369eb591f429131d6889c46b94e711f089e6ca96 # v5
+        uses: docker/metadata-action@902fa8ec7d6ecbf8d84d538b9b233a880e428804 # v5
         id: generate_labels
         with:
           images: |
             ${{ env.IMAGE_NAME }}
       - name: Dagger Build and Publish (PR)
         # yamllint disable-line rule:line-length
-        uses: dagger/dagger-for-github@847ae4458ef34fe9b5f566655957bde6d4891112 # v7
+        uses: dagger/dagger-for-github@b81317a976cb7f7125469707321849737cd1b3bc # v7
         env:
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
@@ -64,7 +64,7 @@ jobs:
           args: --tag "${{ inputs.version }}" publish-and-sign  --registry="ghcr.io"  --image-name="${{ env.IMAGE_NAME }}"  --username="${{ github.repository_owner }}"  --secret=env:GITHUB_TOKEN  --additional-tags="pr-${{ github.event.number }}-${{ inputs.version}},pr-${{ github.event.number }}-${{ inputs.version}}-${{ steps.sha_short.outputs.sha_short }}"  --skip-default-tags  --cosign-private-key=env:COSIGN_PRIVATE_KEY  --cosign-password=env:COSIGN_PASSWORD
       - name: Dagger Build and Publish (main)
         # yamllint disable-line rule:line-length
-        uses: dagger/dagger-for-github@847ae4458ef34fe9b5f566655957bde6d4891112 # v7
+        uses: dagger/dagger-for-github@b81317a976cb7f7125469707321849737cd1b3bc # v7
         env:
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
