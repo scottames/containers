@@ -6,7 +6,7 @@ progress := if args != "" { "auto" } else { "plain" }
 tags := ""
 
 # renovate: datasource=docker depName=quay.io/fedora-ostree-desktops/silverblue
-tagFedoraLatestVersion := "41"
+tagFedoraLatestVersion := "42"
 
 
 _default:
