@@ -1,6 +1,6 @@
 module dagger/atomic
 
-go 1.24.0
+go 1.23.6
 
 replace go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploggrpc => go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploggrpc v0.8.0
 
