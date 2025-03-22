@@ -96,6 +96,10 @@ var (
 		"zip",
 		"zsh",
 
+		// to build xwayland-satellite (Niri)
+		"clang-libs",
+		"xcb-util-cursor-devel",
+
 		// for fabric: https://github.com/danielmiessler/fabric
 		"gcc-c++",
 		"python3-devel",
