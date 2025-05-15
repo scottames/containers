@@ -19,6 +19,7 @@ import (
 	"dagger/atomic/internal/dagger"
 	"fmt"
 	"slices"
+	"strings"
 )
 
 func New(
@@ -60,8 +61,11 @@ func New(
 		return nil, fmt.Errorf("unable to read source files: %w", err)
 	}
 
-	if !slices.Contains(sourceFiles, "atomic") {
-		return nil, fmt.Errorf("Please run from the root of the git repository, 'atomic' not found")
+	if !slices.Contains(sourceFiles, "atomic/") {
+		return nil, fmt.Errorf(
+			"Please run from the root of the git repository, 'atomic' not found in: %s",
+			strings.Join(sourceFiles, ", "),
+		)
 	}
 
 	a := &Atomic{
