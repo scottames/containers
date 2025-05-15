@@ -5,6 +5,7 @@ fedora-toolbox-container args="":
     --progress={{ progress }} \
     call \
     -m toolbox/fedora \
+      --tag "{{ tagFedoraLatestVersion }}" \
       container {{ args }}
 
 #   - set labels & tags from the commandline to override (tags="foo,bar")
@@ -19,6 +20,7 @@ fedora-toolbox-publish-and-sign  name="fedora-toolbox" skip-registry-namespace="
     --progress={{ progress }} \
     call \
     -m toolbox/fedora \
+    --tag "{{ tagFedoraLatestVersion }}" \
     publish-and-sign \
       --registry=ghcr.io \
       --image-name="{{ name }}" \

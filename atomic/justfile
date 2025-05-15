@@ -4,7 +4,7 @@ atomic-container registry="ghcr.io" org="ublue-os" variant="silverblue" suffix="
     --progress={{ progress }} \
     call \
     -m atomic \
-      --image-registry "{{ registry }}" \
+      --registry "{{ registry }}" \
       --org            "{{ org }}" \
       --tag            "{{ tagFedoraLatestVersion }}" \
       --variant        "{{ variant }}" \
@@ -18,7 +18,7 @@ atomic-publish registry="ghcr.io" org="ublue-os" variant="silverblue" suffix="ma
   dagger call \
     --progress=plain \
     -m atomic \
-      --image-registry "{{ registry }}" \
+      --registry "{{ registry }}" \
       --org      "{{ org }}" \
       --tag      "{{ tagFedoraLatestVersion }}" \
       --variant  "{{ variant }}" \
@@ -26,7 +26,7 @@ atomic-publish registry="ghcr.io" org="ublue-os" variant="silverblue" suffix="ma
       --additional-labels="$(printf "{{ labels }}" | sed -n -e 'H;${x;s/\n/,/g;s/^,//;p;}' )" \
       --source   . \
     publish \
-      --image-registry="{{ registry }}" \
+      --registry="{{ registry }}" \
       --image-name="{{ name }}" \
       --repository="containers" \
       --username=$GITHUB_USERNAME \
@@ -46,7 +46,7 @@ atomic-publish-and-sign registry="ghcr.io" org="ublue-os" variant="silverblue" s
     --progress=plain \
     call \
     -m atomic \
-      --image-registry "{{ registry }}" \
+      --registry "{{ registry }}" \
       --org      "{{ org }}" \
       --tag      "{{ tagFedoraLatestVersion }}" \
       --variant  "{{ variant }}" \
@@ -54,7 +54,7 @@ atomic-publish-and-sign registry="ghcr.io" org="ublue-os" variant="silverblue" s
       --additional-labels="$(printf "{{ labels }}" | sed -n -e 'H;${x;s/\n/,/g;s/^,//;p;}' )" \
       --source   . \
     publish-and-sign \
-      --image-registry=ghcr.io \
+      --registry=ghcr.io \
       --image-name="{{ name }}" \
       --repository="containers" \
       --username=$GITHUB_USERNAME \
