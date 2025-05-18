@@ -28,9 +28,8 @@ jobs:
       matrix:
         release:
           - version: 41
-            latest: true
           - version: 42
-            # latest: true # FIXME
+            latest: true
     name: fedora-toolbox
     uses: ./.github/workflows/reusable-toolbox.yaml
     secrets: inherit
