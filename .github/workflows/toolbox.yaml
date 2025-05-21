@@ -28,6 +28,7 @@ jobs:
       matrix:
         release:
           - version: 41
+            latest: false
           - version: 42
             latest: true
     name: fedora-toolbox
