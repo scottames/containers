@@ -109,6 +109,7 @@ var (
 )
 
 type FedoraToolbox struct {
+	Source         *dagger.Directory
 	Registry       string
 	Org            *string
 	Image          string
@@ -121,6 +122,9 @@ type FedoraToolbox struct {
 
 func New(
 	ctx context.Context,
+	// Git repository root directory
+	// referenced by Atomic.fedoraAtomic to determine the path to local files
+	source *dagger.Directory,
 	// Container registry
 	// +optional
 	// +default="registry.fedoraproject.org"
@@ -139,6 +143,7 @@ func New(
 	tag string,
 ) *FedoraToolbox {
 	return &FedoraToolbox{
+		Source:   source,
 		Registry: registry,
 		Org:      org,
 		Image:    image,
@@ -195,6 +200,9 @@ func (ft *FedoraToolbox) Container(ctx context.Context) (*dagger.Container, erro
 		WithPackageGroupsInstalled(packageGroups).
 		WithPackagesSwapped("mesa-va-drivers", "mesa-va-drivers-freeworld").
 		WithPackagesSwapped("mesa-vdpau-drivers", "mesa-vdpau-drivers-freeworld").
+		WithExecScripts([]*dagger.File{ft.Source.File(
+			"toolbox/fedora/scripts/1Password.sh",
+		)}, false).
 		Container(). // ✨ type becomes dagger.Container here!
 		WithFile(
 			"/usr/bin/distrobox-host-exec",
