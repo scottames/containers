@@ -12,19 +12,19 @@ on:
       - sandbox/*/go.*
       - sandbox/**/dagger.json
       - .github/workflows/sandbox.yaml
-      - .github/workflows/reusable-sandbox.yaml
+      - .github/workflows/reusable-toolbox.yaml
   pull_request:
     paths:
       - sandbox/**.go
       - sandbox/*/go.*
       - sandbox/**/dagger.json
       - .github/workflows/sandbox.yaml
-      - .github/workflows/reusable-sandbox.yaml
+      - .github/workflows/reusable-toolbox.yaml
   workflow_dispatch: {}
 jobs:
   sandbox:
     name: sandbox
-    uses: ./.github/workflows/reusable-sandbox.yaml
+    uses: ./.github/workflows/reusable-toolbox.yaml
     secrets: inherit
     permissions:
       contents: read
