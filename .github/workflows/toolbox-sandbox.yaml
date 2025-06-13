@@ -1,5 +1,5 @@
 ---
-name: sandbox
+name: toolbox-sandbox
 on:
   schedule:
     - cron: 30 08 * * 1,3,5 # 01:30 PST mon,wed,fri
@@ -22,9 +22,9 @@ on:
       - .github/workflows/reusable-toolbox.yaml
   workflow_dispatch: {}
 jobs:
-  sandbox:
+  publish:
     name: sandbox
-    uses: ./.github/workflows/reusable-toolbox.yaml
+    uses: ./.github/workflows/reusable-toolbox-build-and-publish.yaml
     secrets: inherit
     permissions:
       contents: read
@@ -34,4 +34,4 @@ jobs:
       module: toolbox/sandbox
       image_name: sandbox-toolbox
       version: latest
-      latest: "true"
+      latest: true
