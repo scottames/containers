@@ -1,0 +1,14 @@
+{
+  "name": "sandbox",
+  "engineVersion": "v0.18.8",
+  "sdk": {
+    "source": "go"
+  },
+  "dependencies": [
+    {
+      "name": "cosign",
+      "source": "github.com/scottames/daggerverse/cosign@v0.0.6",
+      "pin": "0d7b7de707fe14a147f43e3528b2d941dd5547e0"
+    }
+  ]
+}

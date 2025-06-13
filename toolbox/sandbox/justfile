@@ -1,11 +1,10 @@
 # evaluate the container
 [no-exit-message]
-toolbox-fedora-container args="":
+toolbox-sandbox-container args="":
   dagger \
     --progress={{ progress }} \
     call \
-    -m toolbox/fedora \
-      --tag "{{ tagFedoraLatestVersion }}" \
+    -m toolbox/sandbox \
       container {{ args }}
 
 #   - set labels & tags from the commandline to override (tags="foo,bar")
@@ -15,12 +14,11 @@ toolbox-fedora-container args="":
 #     - COSIGN_PASSWORD
 #     - COSIGN_PRIVATE_KEY
 # publish and sign atomic image
-toolbox-fedora-publish-and-sign  name="fedora-toolbox" skip-registry-namespace="false":
+toolbox-sandbox-publish-and-sign  name="sandbox" skip-registry-namespace="false":
   dagger \
     --progress={{ progress }} \
     call \
-    -m toolbox/fedora \
-    --tag "{{ tagFedoraLatestVersion }}" \
+    -m toolbox/sandbox \
     publish-and-sign \
       --registry=ghcr.io \
       --image-name="{{ name }}" \
