@@ -4,6 +4,7 @@ import (
 	"context"
 	"dagger/sandbox/internal/dagger"
 	"fmt"
+	"strings"
 )
 
 // renovate: datasource=github-releases depName=dandavison/delta
@@ -27,6 +28,16 @@ func (s *Sandbox) Container(ctx context.Context,
 		"git-delta_%s_${ARCH}.deb",
 		gitDeltaVersion,
 	)
+
+	nodeUserPath := []string{
+		"/usr/local/sbin",
+		"/usr/local/bin",
+		"/usr/sbin",
+		"/usr/bin",
+		"/sbin",
+		"/bin",
+		"/usr/local/share/npm-global/bin",
+	}
 
 	return dag.Container().
 		From(baseImage).
@@ -82,16 +93,20 @@ func (s *Sandbox) Container(ctx context.Context,
 		).
 		WithEnvVariable(
 			"PATH",
-			"/usr/local/bin:/usr/bin:/bin:/usr/local/share/npm-global/bin",
+			strings.Join(nodeUserPath, ":"),
 		).
+
 		// Set fish as default shell
 		WithEnvVariable("SHELL", "/usr/bin/fish").
 		// Install Claude CLI using full path
-		WithExec([]string{"/usr/local/bin/npm", "install", "-g", "@anthropic-ai/claude-code"}).
+		WithExec([]string{
+			"/usr/local/bin/npm", "install", "-g", "@anthropic-ai/claude-code",
+		}).
 		// Copy and set up firewall script
 		WithFile("/usr/local/bin/init-firewall.sh",
 			dag.CurrentModule().Source().File("init-firewall.sh"),
-			dagger.ContainerWithFileOpts{Permissions: 0755}).
+			dagger.ContainerWithFileOpts{Permissions: 0755},
+		).
 		WithUser("root").
 		WithExec([]string{
 			"sh", "-c",
