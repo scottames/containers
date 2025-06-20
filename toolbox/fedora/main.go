@@ -9,20 +9,6 @@ import (
 )
 
 var (
-	distroboxHostExecSymlinks = []string{
-		"docker",
-		"flatpak",
-		"hostnamectl",
-		"loginctl",
-		"nmcli",
-		"op",
-		"podman",
-		"rpm-ostree",
-		"systemctl",
-		"transactional-update",
-		"xclip",
-		"xdg-open",
-	}
 	labels = map[string]string{
 		"usage":   "This image is meant to be used with the toolbox or distrobox command",
 		"summary": "A cloud-native terminal experience powered by Fedora",
@@ -171,7 +157,7 @@ func (ft *FedoraToolbox) fedora(ctx context.Context) *dagger.Fedora {
 		ft.ReleaseVersion = ft.Tag
 	}
 
-	return ft.distroboxHostExecSymlinks(fedora)
+	return fedora
 }
 
 // Container returns the Fedora toolbx/distrobox dagger.Container
@@ -206,15 +192,4 @@ func (ft *FedoraToolbox) Container(ctx context.Context) (*dagger.Container, erro
 		WithExec([]string{"dnf", "clean", "all"})
 
 	return ctr, nil
-}
-
-func (ft *FedoraToolbox) distroboxHostExecSymlinks(fedora *dagger.Fedora) *dagger.Fedora {
-	for _, link := range distroboxHostExecSymlinks {
-		fedora = fedora.WithExec([]string{
-			"ln", "-fs", "/usr/bin/distrobox-host-exec",
-			fmt.Sprintf("/usr/local/bin/%s", link),
-		}, false)
-	}
-
-	return fedora
 }
