@@ -1,5 +1,5 @@
 ---
-name: fedora-toolbox
+name: toolbox-fedora
 on:
   schedule:
     - cron: 30 08 * * 1,3,5 # 01:30 PST mon,wed,fri
@@ -22,7 +22,7 @@ on:
   # yamllint disable-line rule:empty-values
   workflow_dispatch:
 jobs:
-  fedora_toolbox:
+  publish:
     strategy:
       fail-fast: false
       matrix:
@@ -31,8 +31,8 @@ jobs:
             latest: false
           - version: 42
             latest: true
-    name: fedora-toolbox
-    uses: ./.github/workflows/reusable-toolbox.yaml
+    name: toolbox
+    uses: ./.github/workflows/reusable-toolbox-build-and-publish.yaml
     secrets: inherit
     permissions:
       contents: read
