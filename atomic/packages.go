@@ -123,6 +123,7 @@ var (
 				"mozilla-fira-mono-fonts",
 				"mscore-fonts-all",
 				"netcat",
+				"NetworkManager-tui",
 				"open-sans-fonts",
 				"pam-u2f",
 				"pamu2fcfg",
