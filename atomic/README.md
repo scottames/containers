@@ -24,3 +24,28 @@ Useful commands:
 just                         # print just recipes
 dagger call -m atomic --help # print help for atomic Dagger module
 ```
+
+## Install and Rebase
+
+1. [Install Fedora Silverblue](https://docs.fedoraproject.org/en-US/fedora-silverblue/installation/)
+2. Rebase to an image from this project
+
+    ```bash
+    # change IMAGE and TAG as desired
+    # https://github.com/scottames?tab=packages&repo_name=containers
+    IMAGE=atomic-silverblue-main \
+    TAG=42 \
+      rpm-ostree rebase \
+        ostree-unverified-registry:ghcr.io/scottames/$IMAGE:$TAG
+    ```
+
+3. Rebase to the same image signed
+
+    ```bash
+    # change IMAGE and TAG as desired
+    # https://github.com/scottames?tab=packages&repo_name=containers
+    IMAGE=atomic-silverblue-main \
+    TAG=42 \
+    rpm-ostree rebase \
+        ostree-image-signed:docker://ghcr.io/scottames/$IMAGE:$TAG
+    ```
