@@ -16,4 +16,4 @@ jobs:
       checks: read # required to poll checks
       contents: read # required for actions/checkout
     steps:
-      - uses: wechuli/allcheckspassed@e22f45a4f25f4cf821d1273705ac233355400db1 # v1
+      - uses: wechuli/allcheckspassed@5b5009ffd707b7c6759574c984bb666034b441eb # v2
