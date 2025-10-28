@@ -142,6 +142,7 @@ var (
 				"yubico-piv-tool-devel",
 				"yubikey-manager",
 				"yubikey-manager-qt",
+				"ydotool",
 
 				// Qemu / Virt-manager
 				"edk2-ovmf",
