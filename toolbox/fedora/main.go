@@ -52,7 +52,6 @@ var (
 		"nodejs",
 		"nodejs-npm",
 		"nss-mdns",
-		"nvidia-vaapi-driver",
 		"openssh-clients",
 		"pam",
 		"passwd",
