@@ -114,6 +114,7 @@ var (
 				"google-noto-emoji-fonts",
 				"google-noto-fonts-common",
 				"google-roboto-fonts",
+				"fira-code-fonts",
 				"ibm-plex-mono-fonts",
 				"iotop",
 				"jetbrains-mono-fonts-all",
@@ -121,8 +122,6 @@ var (
 				"libadwaita",
 				"light",
 				"lm_sensors", // required by freon gnome-ext
-				"mozilla-fira-fonts-common",
-				"mozilla-fira-mono-fonts",
 				"mscore-fonts-all",
 				"netcat",
 				"NetworkManager-tui",
@@ -162,8 +161,7 @@ var (
 				// Required for ZSA voyager
 				"gtk3",
 				"libusb",
-				"webkit2gtk3",
-				"webkit2gtk4.0",
+				"webkit2gtk4.1",
 				// Required for https://github.com/oae/gnome-shell-pano
 				"libgda",
 				"libgda-sqlite",
