@@ -175,10 +175,7 @@ var (
 				// Required for ZSA voyager
 				"gtk3",
 				"libusb",
-				"webkit2gtk4.0",
-				// Required for https://github.com/oae/gnome-shell-pano
-				"libgda",
-				"libgda-sqlite",
+				"webkit2gtk4.1",
 			},
 		},
 	}
