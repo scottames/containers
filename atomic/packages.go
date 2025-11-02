@@ -7,7 +7,7 @@ func (a *Atomic) getPackageListFrom(packageMap map[string]map[string][]string) [
 		suffix = *a.Suffix
 	}
 
-	for _, opts := range sliceStringProduct([]string{All, a.Variant, suffix}) {
+	for _, opts := range sliceStringProduct([]string{All, a.Variant, suffix, a.ReleaseVersion}) {
 		p, ok := packageMap[opts[0]][opts[1]]
 		if ok {
 			packages = append(packages, p...)
@@ -95,6 +95,20 @@ var (
 			},
 		},
 		All: {
+			"43": {
+				// https://fedoraproject.org/wiki/Changes/Modular_GnuPG_Packaging
+				"gnupg2",           // gpg executable
+				"gnupg2-dirmngr",   // certificate management service
+				"gnupg2-gpg-agent", // cryptographic agent
+				"gnupg2-gpgconf",   // core configuration utilities
+				"gnupg2-scdaemon",  // SmartCard daemon
+				"gnupg2-utils",     // non-essential utilities
+				// "gnupg2-keyboxd",   // public key material service
+				// "gnupg2-smime",     // S/MIME support
+				// "gnupg2-g13",       // encrypted file system containers
+				// "gnupg2-verify",    // gpgv executable
+				// "gnupg2-wks",       // Web Key Service (WKS) client and server
+			},
 			All: {
 				// Installed via script
 				// "1password",
@@ -161,7 +175,7 @@ var (
 				// Required for ZSA voyager
 				"gtk3",
 				"libusb",
-				"webkit2gtk4.1",
+				"webkit2gtk4.0",
 				// Required for https://github.com/oae/gnome-shell-pano
 				"libgda",
 				"libgda-sqlite",
