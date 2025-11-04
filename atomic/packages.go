@@ -42,7 +42,7 @@ var (
 		"https://copr.fedorainfracloud.org/coprs/yalter/niri/repo/fedora-FEDORA_MAJOR_VERSION/yalter-niri-fedora-FEDORA_MAJOR_VERSION.repo",
 		"https://copr.fedorainfracloud.org/coprs/scottames/ghostty/repo/fedora-FEDORA_MAJOR_VERSION/scottames-ghostty-fedora-FEDORA_MAJOR_VERSION.repo",
 		"https://copr.fedorainfracloud.org/coprs/scottames/hypr/repo/fedora-FEDORA_MAJOR_VERSION/scottames-hypr-fedora-FEDORA_MAJOR_VERSION.repo",
-		"https://copr.fedorainfracloud.org/coprs/scottames/swww/repo/fedora-FEDORA_MAJOR_VERSION/scottames-swww-fedora-FEDORA_MAJOR_VERSION.repo",
+		"https://copr.fedorainfracloud.org/coprs/scottames/awww/repo/fedora-FEDORA_MAJOR_VERSION/scottames-awww-fedora-FEDORA_MAJOR_VERSION.repo",
 		"https://copr.fedorainfracloud.org/coprs/tofik/nwg-shell/repo/fedora-FEDORA_MAJOR_VERSION/tofik-nwg-shell-fedora-FEDORA_MAJOR_VERSION.repo",
 	}
 	// for layering, primarily because these packages do not play well with opt
@@ -86,7 +86,7 @@ var (
 				"swaybg",
 				"swayidle",
 				"swaylock",
-				"swww",
+				"awww",
 				"waybar",
 				"wlogout",
 				"wtype",
