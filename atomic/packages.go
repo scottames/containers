@@ -40,9 +40,10 @@ var (
 	reposForBuild = []string{ // will not be kept in final image
 		"https://pkgs.tailscale.com/stable/fedora/tailscale.repo",
 		"https://copr.fedorainfracloud.org/coprs/yalter/niri/repo/fedora-FEDORA_MAJOR_VERSION/yalter-niri-fedora-FEDORA_MAJOR_VERSION.repo",
+		"https://copr.fedorainfracloud.org/coprs/scottames/awww/repo/fedora-FEDORA_MAJOR_VERSION/scottames-awww-fedora-FEDORA_MAJOR_VERSION.repo",
 		"https://copr.fedorainfracloud.org/coprs/scottames/ghostty/repo/fedora-FEDORA_MAJOR_VERSION/scottames-ghostty-fedora-FEDORA_MAJOR_VERSION.repo",
 		"https://copr.fedorainfracloud.org/coprs/scottames/hypr/repo/fedora-FEDORA_MAJOR_VERSION/scottames-hypr-fedora-FEDORA_MAJOR_VERSION.repo",
-		"https://copr.fedorainfracloud.org/coprs/scottames/awww/repo/fedora-FEDORA_MAJOR_VERSION/scottames-awww-fedora-FEDORA_MAJOR_VERSION.repo",
+		"https://copr.fedorainfracloud.org/coprs/scottames/mise/repo/fedora-FEDORA_MAJOR_VERSION/scottames-mise-fedora-FEDORA_MAJOR_VERSION.repo",
 		"https://copr.fedorainfracloud.org/coprs/scottames/vicinae/repo/fedora-FEDORA_MAJOR_VERSION/scottames-vicinae-fedora-FEDORA_MAJOR_VERSION.repo",
 		"https://copr.fedorainfracloud.org/coprs/tofik/nwg-shell/repo/fedora-FEDORA_MAJOR_VERSION/tofik-nwg-shell-fedora-FEDORA_MAJOR_VERSION.repo",
 	}
@@ -72,13 +73,9 @@ var (
 			All: {
 				"gnome-keyring",
 				"grim",
-				"hypridle",
-				"hyprlock",
-				"hyprpaper",
-				"hyprpicker",
 				"mako",
-				"niri",
-				"nwg-look",
+				"niri",     // from copr:yalter/niri
+				"nwg-look", // from copr:tofik/nwg-shell
 				"pavucontrol",
 				"mate-polkit",
 				"rofi-wayland",
@@ -87,12 +84,18 @@ var (
 				"swaybg",
 				"swayidle",
 				"swaylock",
-				"awww",
+				"awww", // from copr:scottames/awww
 				"waybar",
 				"wlogout",
 				"wtype",
 				"xdg-desktop-portal-gnome",
 				"xdg-desktop-portal-gtk",
+
+				// from copr:scottames/hypr
+				"hypridle",
+				"hyprlock",
+				"hyprpaper",
+				"hyprpicker",
 			},
 		},
 		All: {
@@ -121,7 +124,7 @@ var (
 				"dbus-x11",
 				"firewall-config",
 				"fish",
-				"ghostty",
+				"ghostty", // from copr:scottames/ghostty
 				"google-droid-sans-fonts",
 				"google-droid-sans-mono-fonts",
 				"google-go-mono-fonts",
@@ -137,6 +140,7 @@ var (
 				"libadwaita",
 				"light",
 				"lm_sensors", // required by freon gnome-ext
+				"mise",       // from copr:scottames/mise
 				"mscore-fonts-all",
 				"netcat",
 				"NetworkManager-tui",
@@ -152,7 +156,7 @@ var (
 				"pulseaudio-utils",
 				"tailscale",
 				"udica",
-				"vicinae",
+				"vicinae", // from copr:scottames/vicinae
 				"wl-clipboard",
 				"xclip",
 				"yubico-piv-tool-devel",
