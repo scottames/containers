@@ -140,6 +140,7 @@ var (
 				"mscore-fonts-all",
 				"netcat",
 				"NetworkManager-tui",
+				"nodejs", // required for vicinae extensions
 				"open-sans-fonts",
 				"pam-u2f",
 				"pamu2fcfg",
