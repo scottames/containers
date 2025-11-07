@@ -15,6 +15,9 @@ var (
 
 		"com.github.containers.toolbox": "true",
 	}
+	reposForBuild = []string{
+		"https://copr.fedorainfracloud.org/coprs/scottames/mise/repo/fedora-FEDORA_MAJOR_VERSION/scottames-mise-fedora-FEDORA_MAJOR_VERSION.repo",
+	}
 	packageUrlsWithReleaseVersion = []string{
 		"https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-%s.noarch.rpm",
 		"https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-%s.noarch.rpm",
@@ -46,6 +49,7 @@ var (
 		"lsof",
 		"man-db",
 		"man-pages",
+		"mise",
 		"mtr",
 		"netcat",
 		"ncurses",
@@ -175,9 +179,16 @@ func (ft *FedoraToolbox) Container(ctx context.Context) (*dagger.Container, erro
 	dbheFile := db.HostExecFile()
 	hostSpawn := db.HostSpawnFile()
 
+	finalReposForBuild := replaceStringInSlice(
+		reposForBuild,
+		"FEDORA_MAJOR_VERSION",
+		ft.ReleaseVersion,
+	)
+
 	ctr := fedora.
 		WithPackagesInstalled(packages).
 		WithPackageGroupsInstalled(packageGroups).
+		WithReposFromUrls(finalReposForBuild, false). // false => delete repo file in final image
 		WithPackagesSwapped("mesa-va-drivers", "mesa-va-drivers-freeworld").
 		WithPackagesSwapped("mesa-vdpau-drivers", "mesa-vdpau-drivers-freeworld").
 		Container(). // ✨ type becomes dagger.Container here!
