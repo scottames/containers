@@ -37,7 +37,7 @@ jobs:
           - niri
         suffix:
           - main
-          - nvidia
+          # - nvidia
         version:
           - "42"
           - "43"
