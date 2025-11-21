@@ -26,7 +26,7 @@ jobs:
       contents: write # allow workflow to write to PR
     steps:
       - name: checkout
-        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6
         with:
           # should be used for PRs only
           # https://github.com/marketplace/actions/add-commit#working-with-prs
