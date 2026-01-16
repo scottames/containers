@@ -21,7 +21,6 @@ var (
 
 	scriptsPostPackageInstall = []string{
 		"1Password.sh",
-		"wezterm.sh",
 	}
 )
 
