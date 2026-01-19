@@ -39,7 +39,6 @@ jobs:
           - main
           # - nvidia
         version:
-          - "42"
           - "43"
     env:
       IMAGE_NAME: atomic-${{ matrix.variant }}-${{ matrix.suffix }}
