@@ -1,0 +1,64 @@
+# mise-security-tools.toml
+# Security tools configuration for mise
+# 
+# Usage:
+#   Option 1: Include in your global config
+#     cat mise-security-tools.toml >> ~/.config/mise/config.toml
+#
+#   Option 2: Use as a standalone file
+#     cd ~ && mise install -f mise-security-tools.toml
+#
+#   Option 3: Install individually (see commands below)
+
+[tools]
+# =============================================================================
+# Available via aqua backend (Go binaries)
+# =============================================================================
+
+# OpenSSF Scorecard - repo security health metrics
+"aqua:ossf/scorecard" = "latest"
+
+# OSV Scanner - Google's vulnerability database scanner
+"aqua:google/osv-scanner" = "latest"
+
+# Trivy - comprehensive vulnerability scanner
+"aqua:aquasecurity/trivy" = "latest"
+
+# Gitleaks - secrets detection
+"aqua:gitleaks/gitleaks" = "latest"
+
+# gosec - Go security linter
+"aqua:securego/gosec" = "latest"
+
+# GitHub CLI
+"aqua:cli/cli" = "latest"
+
+# jq - JSON processor
+"aqua:jqlang/jq" = "latest"
+
+# =============================================================================
+# Go tools (use go backend)
+# =============================================================================
+
+# govulncheck - official Go vulnerability checker
+"go:golang.org/x/vuln/cmd/govulncheck" = "latest"
+
+# =============================================================================
+# NOT available in aqua - need separate installation
+# =============================================================================
+# 
+# Python tools (use pipx or pip):
+#   pipx install semgrep
+#   pipx install bandit  
+#   pipx install pip-audit
+#   pipx install guarddog
+#
+# Rust tools (use cargo):
+#   cargo install cargo-audit
+#   cargo install cargo-deny
+#   cargo install cargo-geiger
+#
+# Node tools (use npm):
+#   npm install -g socket
+#
+# See install-remaining-tools.sh for automated installation

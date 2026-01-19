@@ -93,11 +93,35 @@ var (
 		"gcc-c++",
 		"python3-devel",
 
+		// for guarddog (security tool - needs pygit2)
+		"libgit2-devel",
+
 		"https://s3.amazonaws.com/session-manager-downloads/plugin/latest/linux_64bit/session-manager-plugin.rpm",
+	}
+
+	// Security vetting tools installed via pipx --global
+	pipxSecurityTools = []string{
+		"semgrep",
+		"bandit",
+		"pip-audit",
+		"guarddog",
+	}
+
+	// Security vetting tools installed via cargo (built in separate container)
+	cargoSecurityTools = []string{
+		"cargo-audit",
+		"cargo-deny",
+		"cargo-geiger",
+	}
+
+	// Security vetting tools installed via npm -g
+	npmSecurityTools = []string{
+		"socket",
 	}
 )
 
 type FedoraToolbox struct {
+	Source         *dagger.Directory
 	Registry       string
 	Org            *string
 	Image          string
@@ -110,6 +134,9 @@ type FedoraToolbox struct {
 
 func New(
 	ctx context.Context,
+	// Source directory containing scripts and config files
+	// +optional
+	source *dagger.Directory,
 	// Container registry
 	// +optional
 	// +default="registry.fedoraproject.org"
@@ -128,6 +155,7 @@ func New(
 	tag string,
 ) *FedoraToolbox {
 	return &FedoraToolbox{
+		Source:   source,
 		Registry: registry,
 		Org:      org,
 		Image:    image,
@@ -185,6 +213,13 @@ func (ft *FedoraToolbox) Container(ctx context.Context) (*dagger.Container, erro
 		ft.ReleaseVersion,
 	)
 
+	// Build Rust security tools in a separate container
+	cargoInstallArgs := append([]string{"cargo", "install"}, cargoSecurityTools...)
+	rustBuilder := dag.Container().
+		From("rust:latest").
+		WithMountedCache("/root/.cargo/registry", dag.CacheVolume("cargo-registry")).
+		WithExec(cargoInstallArgs)
+
 	ctr := fedora.
 		WithPackagesInstalled(packages).
 		WithPackageGroupsInstalled(packageGroups).
@@ -198,8 +233,40 @@ func (ft *FedoraToolbox) Container(ctx context.Context) (*dagger.Container, erro
 		).
 		WithFile("/usr/bin/host-spawn", hostSpawn,
 			dagger.ContainerWithFileOpts{Permissions: 0755, Owner: "root"},
-		).
-		WithExec([]string{"dnf", "clean", "all"})
+		)
+
+	// Copy Rust security tool binaries from builder
+	for _, tool := range cargoSecurityTools {
+		ctr = ctr.WithFile(
+			fmt.Sprintf("/usr/local/bin/%s", tool),
+			rustBuilder.File(fmt.Sprintf("/usr/local/cargo/bin/%s", tool)),
+			dagger.ContainerWithFileOpts{Permissions: 0755},
+		)
+	}
+
+	// Install pipx security tools globally
+	for _, tool := range pipxSecurityTools {
+		ctr = ctr.WithExec([]string{"pipx", "install", "--global", tool})
+	}
+
+	// Install npm security tools globally
+	for _, tool := range npmSecurityTools {
+		ctr = ctr.WithExec([]string{"npm", "install", "-g", tool})
+	}
+
+	// Copy scripts and config if source is provided
+	if ft.Source != nil {
+		scriptsDir := ft.Source.Directory("scripts")
+		ctr = ctr.
+			WithFile("/usr/local/bin/vet-tool.sh", scriptsDir.File("vet-tool.sh"),
+				dagger.ContainerWithFileOpts{Permissions: 0755}).
+			WithFile("/usr/local/bin/vet-deps.sh", scriptsDir.File("vet-deps.sh"),
+				dagger.ContainerWithFileOpts{Permissions: 0755}).
+			WithDirectory("/etc/security-tools", dag.Directory().
+				WithFile("mise-security-tools.toml", scriptsDir.File("mise-security-tools.toml")))
+	}
+
+	ctr = ctr.WithExec([]string{"dnf", "clean", "all"})
 
 	return ctr, nil
 }

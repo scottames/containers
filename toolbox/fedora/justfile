@@ -5,6 +5,7 @@ fedora-toolbox-container args="":
     --progress={{ progress }} \
     call \
     -m toolbox/fedora \
+      --source=. \
       --tag "{{ tagFedoraLatestVersion }}" \
       container {{ args }}
 
@@ -14,12 +15,13 @@ fedora-toolbox-container args="":
 #     - GITHUB_TOKEN
 #     - COSIGN_PASSWORD
 #     - COSIGN_PRIVATE_KEY
-# publish and sign atomic image
+# publish and sign toolbox image
 fedora-toolbox-publish-and-sign  name="fedora-toolbox" skip-registry-namespace="false":
   dagger \
     --progress={{ progress }} \
     call \
     -m toolbox/fedora \
+    --source=. \
     --tag "{{ tagFedoraLatestVersion }}" \
     publish-and-sign \
       --registry=ghcr.io \
