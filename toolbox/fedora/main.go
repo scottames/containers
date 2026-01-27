@@ -47,6 +47,7 @@ var (
 		"less",
 		"libxcrypt-compat",
 		"lsof",
+		"lua",
 		"man-db",
 		"man-pages",
 		"mise",
