@@ -80,3 +80,43 @@ GitHub Actions workflows in `.github/workflows/`:
 - `atomic.yaml` - Daily builds of Atomic images
 - `toolbox.yaml` / `reusable-toolbox.yaml` - Toolbox builds
 - `dagger-update.yaml` - Auto-updates Dagger modules on renovate branches
+
+## Fedora Atomic / ostree Filesystem Constraints
+
+When adding install scripts to `atomic/scripts/`, be aware of ostree filesystem
+behavior:
+
+### Safe Locations (baked into image)
+
+- `/usr/share/` - Standard location for application data
+- `/usr/lib/` - Libraries and application binaries
+- `/usr/bin/` - Executables (or symlinks to them)
+- `/etc/` - Configuration files
+
+### Problematic Locations
+
+- `/opt` - Symlink to `/var/opt` on ostree systems. `/var` is a separate mutable
+  filesystem that only exists on the live system, NOT during image build. Files
+  written to `/opt` or `/var` during build will NOT persist in the final image.
+- `/var/*` - Same issue as `/opt`
+
+### Workaround Pattern (see `1Password.sh`)
+
+If an RPM installs to `/opt`, you must:
+
+1. Install the RPM (files land in `/var/opt/`)
+2. Move files to `/usr/lib/<app>`
+3. Create runtime symlinks via `/usr/lib/tmpfiles.d/<app>.conf`:
+   ```
+   L  /opt/<app>  -  -  -  -  /usr/lib/<app>
+   ```
+
+### Best Practice
+
+When writing install scripts for tarballs/binaries, install directly to
+`/usr/share/<app>` to avoid the `/opt` dance entirely.
+
+References:
+
+- [Fedora Silverblue filesystem structure](https://insujang.github.io/2020-07-15/fedora-silverblue/)
+- [Universal Blue 1Password installer](https://github.com/ublue-os/bling/blob/main/modules/bling/installers/1password.sh)

@@ -1,6 +1,6 @@
 {
   "name": "atomic",
-  "engineVersion": "v0.18.8",
+  "engineVersion": "v0.19.10",
   "sdk": {
     "source": "go"
   },
@@ -15,5 +15,6 @@
       "source": "github.com/scottames/daggerverse/fedora@v0.0.6",
       "pin": "0d7b7de707fe14a147f43e3528b2d941dd5547e0"
     }
-  ]
+  ],
+  "disableDefaultFunctionCaching": true
 }
