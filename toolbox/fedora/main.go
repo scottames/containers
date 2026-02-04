@@ -34,6 +34,7 @@ var (
 		"dnf-plugins-core",
 		"findutils",
 		"fish",
+		"fuse",
 		"git",
 		"glibc-all-langpacks",
 		"glibc-locale-source",
