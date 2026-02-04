@@ -21,6 +21,7 @@ var (
 
 	scriptsPostPackageInstall = []string{
 		"1Password.sh",
+		"Obsidian.sh",
 	}
 )
 
