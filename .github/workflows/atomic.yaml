@@ -70,7 +70,7 @@ jobs:
           && github.ref != 'refs/heads/main'
         with:
           # renovate: datasource=github-releases depName=dagger/dagger
-          version: v0.19.10
+          version: v0.19.11
           verb: call
           module: atomic
           cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
@@ -92,7 +92,7 @@ jobs:
           && github.ref == 'refs/heads/main'
         with:
           # renovate: datasource=github-releases depName=dagger/dagger
-          version: v0.19.10
+          version: v0.19.11
           verb: call
           module: atomic
           cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
