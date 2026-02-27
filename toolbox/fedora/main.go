@@ -58,6 +58,7 @@ var (
 		"nodejs",
 		"nodejs-npm",
 		"nss-mdns",
+		"openssl-devel",
 		"openssh-clients",
 		"pam",
 		"passwd",
