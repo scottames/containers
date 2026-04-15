@@ -40,6 +40,7 @@ jobs:
           # - nvidia
         version:
           - "43"
+          - "44"
     env:
       IMAGE_NAME: atomic-${{ matrix.variant }}-${{ matrix.suffix }}
     steps:
