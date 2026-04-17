@@ -21,6 +21,16 @@
       "algorithm": "sha256"
     },
     {
+      "id": "github_release/github.com/dagger/dagger/v0.20.6/dagger_v0.20.6_linux_amd64.tar.gz",
+      "checksum": "3BFCCB841A6954EE6B46C0ABEF77572A30C4AA50661FF72FB9340DE0421E2F45",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/dagger/dagger/v0.20.6/dagger_v0.20.6_linux_arm64.tar.gz",
+      "checksum": "1018E2B0B1BECAE3650428902B841DB82C85FE21CF0B22FEFCEF839D30D51989",
+      "algorithm": "sha256"
+    },
+    {
       "id": "github_release/github.com/int128/ghcp/v1.15.3/ghcp_linux_amd64.zip",
       "checksum": "537B71C1382FC95C73702D4BA0FC1A2465842A1C20F9987D75B5C7581BA115EA",
       "algorithm": "sha256"
