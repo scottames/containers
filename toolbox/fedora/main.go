@@ -188,12 +188,18 @@ func (ft *FedoraToolbox) Container(ctx context.Context) (*dagger.Container, erro
 		ft.ReleaseVersion,
 	)
 
-	ctr := fedora.
+	fedora = fedora.
 		WithPackagesInstalled(packages).
 		WithPackageGroupsInstalled(packageGroups).
-		WithReposFromUrls(finalReposForBuild, false). // false => delete repo file in final image
-		WithPackagesSwapped("mesa-va-drivers", "mesa-va-drivers-freeworld").
-		WithPackagesSwapped("mesa-vdpau-drivers", "mesa-vdpau-drivers-freeworld").
+		WithReposFromUrls(finalReposForBuild, false) // false => delete repo file in final image
+
+	if hasCompatibleMesaFreeworldDrivers(ft.ReleaseVersion) {
+		fedora = fedora.
+			WithPackagesSwapped("mesa-va-drivers", "mesa-va-drivers-freeworld").
+			WithPackagesSwapped("mesa-vdpau-drivers", "mesa-vdpau-drivers-freeworld")
+	}
+
+	ctr := fedora.
 		Container(). // ✨ type becomes dagger.Container here!
 		WithFile(
 			"/usr/bin/distrobox-host-exec",
