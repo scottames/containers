@@ -10,12 +10,14 @@ on:
       - atomic/**.go
       - atomic/go.*
       - atomic/dagger.json
+      - atomic/scripts/**.sh
       - .github/workflows/atomic.yaml
   pull_request:
     paths:
       - atomic/**.go
       - atomic/go.*
       - atomic/dagger.json
+      - atomic/scripts/**.sh
       - .github/workflows/atomic.yaml
   # yamllint disable-line rule:empty-values
   workflow_dispatch:
