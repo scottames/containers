@@ -99,20 +99,6 @@ var (
 			},
 		},
 		All: {
-			"43": {
-				// https://fedoraproject.org/wiki/Changes/Modular_GnuPG_Packaging
-				"gnupg2",           // gpg executable
-				"gnupg2-dirmngr",   // certificate management service
-				"gnupg2-gpg-agent", // cryptographic agent
-				"gnupg2-gpgconf",   // core configuration utilities
-				"gnupg2-scdaemon",  // SmartCard daemon
-				"gnupg2-utils",     // non-essential utilities
-				// "gnupg2-keyboxd",   // public key material service
-				// "gnupg2-smime",     // S/MIME support
-				// "gnupg2-g13",       // encrypted file system containers
-				// "gnupg2-verify",    // gpgv executable
-				// "gnupg2-wks",       // Web Key Service (WKS) client and server
-			},
 			All: {
 				// Installed via script
 				// "1password",
@@ -125,6 +111,13 @@ var (
 				"firewall-config",
 				"fish",
 				"ghostty", // from copr:scottames/ghostty
+				// https://fedoraproject.org/wiki/Changes/Modular_GnuPG_Packaging
+				"gnupg2",           // gpg executable
+				"gnupg2-dirmngr",   // certificate management service
+				"gnupg2-gpg-agent", // cryptographic agent
+				"gnupg2-gpgconf",   // core configuration utilities
+				"gnupg2-scdaemon",  // SmartCard daemon
+				"gnupg2-utils",     // non-essential utilities
 				"google-droid-sans-fonts",
 				"google-droid-sans-mono-fonts",
 				"google-go-mono-fonts",
@@ -154,6 +147,7 @@ var (
 				"powerline-fonts",
 				"powertop",
 				"pulseaudio-utils",
+				"skopeo",
 				"tailscale",
 				"udica",
 				"vicinae", // from copr:scottames/vicinae
