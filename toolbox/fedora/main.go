@@ -69,6 +69,7 @@ var (
 		"ripgrep",
 		"rsync",
 		"shadow-utils",
+		"skopeo",
 		"sudo",
 		"tcpdump",
 		"time",
