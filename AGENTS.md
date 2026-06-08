@@ -68,7 +68,7 @@ Key patterns:
 
 ## Tool Versions
 
-Managed via Aqua (`.aqua/aqua.yaml`):
+Managed via Mise (`.mise/config.toml`):
 
 - `aqua install` to install pinned versions
 - dagger, just, gobrew, ghcp
