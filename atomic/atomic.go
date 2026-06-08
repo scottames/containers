@@ -21,7 +21,6 @@ var (
 
 	scriptsPostPackageInstall = []string{
 		"1Password.sh",
-		"Warp.sh",
 		"Zed.sh",
 		"Obsidian.sh",
 	}
