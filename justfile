@@ -55,9 +55,14 @@ go-work target="":
 develop mod="":
     #!/usr/bin/env bash
     set -e
-    _DAGGER_MODS="{{ mod }}"
-    if [[ -z "${_DAGGER_MODS}" ]]; then
-      mapfile -t _DAGGER_MODS < <(find . -type f -name dagger.json -print0 | xargs -0 dirname)
+    _DAGGER_MODS=()
+    if [[ -n "{{ mod }}" ]]; then
+      _DAGGER_MODS=("{{ mod }}")
+    else
+      shopt -s globstar nullglob
+      for _DAGGER_JSON in **/dagger.json; do
+        _DAGGER_MODS+=("$(dirname "${_DAGGER_JSON}")")
+      done
     fi
 
     for _DAGGER_MOD in "${_DAGGER_MODS[@]}"; do
@@ -85,6 +90,38 @@ develop mod="":
       popd >/dev/null || exit 1
     done
     echo "=> dagger-develop: done"
+
+# run `dagger update` for all Dagger modules, or the given module
+update-dagger-dependencies mod="":
+    #!/usr/bin/env bash
+    set -euo pipefail
+    _DAGGER_MODS=()
+    if [[ -n "{{ mod }}" ]]; then
+      _DAGGER_MODS=("{{ mod }}")
+    else
+      shopt -s globstar nullglob
+      for _DAGGER_JSON in **/dagger.json; do
+        _DAGGER_MODS+=("$(dirname "${_DAGGER_JSON}")")
+      done
+    fi
+
+    for _DAGGER_MOD in "${_DAGGER_MODS[@]}"; do
+      echo "=> ${_DAGGER_MOD}: dagger update"
+
+      _DAGGER_CONFIG_JSON="$(dagger config --mod "${_DAGGER_MOD}" --silent --json)"
+      _DAGGER_DEPS_OUTPUT="$(jq -r '.dependencies // [] | .[].source' <<<"${_DAGGER_CONFIG_JSON}")"
+      _DAGGER_DEPS=()
+
+      if [[ -n "${_DAGGER_DEPS_OUTPUT}" ]]; then
+        mapfile -t _DAGGER_DEPS <<<"${_DAGGER_DEPS_OUTPUT}"
+      fi
+
+      if [[ "${#_DAGGER_DEPS[@]}" -eq 0 ]]; then
+        continue
+      fi
+
+      dagger update --mod "${_DAGGER_MOD}" "${_DAGGER_DEPS[@]}"
+    done
 
 # initialize a new Dagger module
 [no-exit-message]

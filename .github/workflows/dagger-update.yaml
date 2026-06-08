@@ -1,5 +1,8 @@
 ---
 name: dagger-update
+concurrency:
+  group: dagger-update-${{ github.ref }}
+  cancel-in-progress: true
 on:
   # using on: pull_request causes a loop
   # run on pushes to renovate branches
@@ -7,6 +10,7 @@ on:
   push:
     paths:
       - "**/dagger.json"
+      - ".mise/config.toml"
     branches:
       - renovate/*
   workflow_dispatch:
@@ -22,52 +26,120 @@ jobs:
   dagger-update:
     name: Update Dagger Modules
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     permissions:
-      contents: write # allow workflow to write to PR
+      contents: read # required for actions/checkout
+    outputs:
+      has-changes: ${{ steps.changes.outputs.has-changes }}
     steps:
       - name: checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
-          # should be used for PRs only
-          # https://github.com/marketplace/actions/add-commit#working-with-prs
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-          ref: ${{ github.event.pull_request.head.ref }}
-      # yamllint disable-line rule:line-length
-      - name: Generate GitHub token
-        # https://github.com/actions/create-github-app-token
-        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
-        id: generate-token
-        if: "! github.event.pull_request.head.repo.fork"
-        with:
-          client-id: ${{ vars.APP_CLIENT_ID }}
-          private-key: ${{ secrets.APP_PRIVATE_KEY }}
-          permission-contents: write # create releases
-          permission-pull-requests: write # create release pull requests
+          ref: ${{ github.sha }}
       - name: install mise
         uses: jdx/mise-action@1648a7812b9aeae629881980618f079932869151 # v4.0.1
         with:
           install: true
           cache: true
           experimental: true
-          github_token: ${{ steps.generate-token.outputs.token }}
+      - name: dagger update
+        run: |
+          just update-dagger-dependencies
       - name: dagger develop
         run: |
           just goUpdates="${{ inputs.go-updates }}" develop
-      - name: push changes with ghcp
-        if: "! github.event.pull_request.head.repo.fork"
+      - name: Create update patch
+        id: changes
+        run: |
+          set -euo pipefail
+
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "::notice ::No Dagger changes needed"
+            echo "has-changes=false" >>"${GITHUB_OUTPUT}"
+            exit 0
+          fi
+
+          git diff --binary >dagger-update.patch
+          echo "has-changes=true" >>"${GITHUB_OUTPUT}"
+      - name: Upload update patch
+        if: steps.changes.outputs.has-changes == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: dagger-update-patch
+          path: dagger-update.patch
+          if-no-files-found: error
+
+  push-changes:
+    name: Push Dagger Module Updates
+    runs-on: ubuntu-latest
+    needs: dagger-update
+    timeout-minutes: 10
+    if: >-
+      github.event_name == 'push' &&
+      startsWith(github.ref_name, 'renovate/') &&
+      needs.dagger-update.outputs.has-changes == 'true'
+    permissions:
+      contents: read # required for actions/checkout
+    steps:
+      - name: checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          ref: ${{ github.ref_name }}
+      - name: Download update patch
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: dagger-update-patch
+      - name: Validate update patch
+        run: |
+          set -euo pipefail
+
+          _PATCH_NUMSTAT="$(git apply --numstat dagger-update.patch)"
+
+          while IFS=$'\t' read -r _ADDED _DELETED _PATH; do
+            case "${_PATH}" in
+              go.work | \
+              atomic/dagger.json | \
+              atomic/go.mod | \
+              atomic/go.sum | \
+              atomic/internal/dagger/* | \
+              atomic/internal/querybuilder/* | \
+              atomic/internal/telemetry/* | \
+              toolbox/fedora/dagger.json | \
+              toolbox/fedora/go.mod | \
+              toolbox/fedora/go.sum | \
+              toolbox/fedora/internal/dagger/* | \
+              toolbox/fedora/internal/querybuilder/* | \
+              toolbox/fedora/internal/telemetry/*)
+                ;;
+              *)
+                echo "::error ::Unexpected path in Dagger update patch: ${_PATH}"
+                exit 1
+                ;;
+            esac
+          done <<<"${_PATCH_NUMSTAT}"
+      - name: Apply update patch
+        run: |
+          set -euo pipefail
+
+          git apply --3way dagger-update.patch
+      # yamllint disable-line rule:line-length
+      - name: Generate GitHub token
+        # https://github.com/actions/create-github-app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        id: generate-token
+        with:
+          client-id: ${{ vars.APP_CLIENT_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          permission-contents: write # push generated changes
+      - name: Push changes
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
         run: |
           set -eu
 
-          if ! ghcp -v; then
-            echo "::error ::int128/ghcp not found - needed to push."
-            exit 1
-          fi
-
-          if [ -z "$(git status --porcelain)" ]; then
-            echo "::notice ::No lockfile changes needed"
+          if git diff --quiet; then
+            echo "::notice ::No Dagger changes needed"
             exit 0
           fi
 
@@ -76,15 +148,11 @@ jobs:
             branch="${GITHUB_REF_NAME}"
           fi
 
-          GO_UPDATES_STR=""
-          if [ "${{ inputs.go-updates }}" = "true" ]; then
-            GO_UPDATES_STR=" + related golang updates"
-          fi
-
-          # shellcheck disable=SC2046
-          # ^- we want it to split!
-          ghcp commit -r "$GITHUB_REPOSITORY" -b "${branch}" \
-            -m "chore(dagger): develop${GO_UPDATES_STR}" \
-            $(git --no-pager diff --name-only)
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git diff --name-only -z | xargs -0 git add --
+          git commit -m "chore(dagger): update generated artifacts"
+          git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
+            "HEAD:${branch}"
           echo "::notice ::changes pushed to branch, 'exit 1' to force checks"
           exit 1

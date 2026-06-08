@@ -6,6 +6,17 @@
   gomod: {
     enabled: false, // dagger should handle changes to go.mod/sum
   },
+  customManagers: [
+    {
+      customType: 'regex',
+      managerFilePatterns: ['/(^|/)dagger\\.json$/'],
+      matchStrings: [
+        '"source":\\s*"github\\.com/(?<packageName>scottames/daggerverse)/(?<depName>[^"@]+)@(?<currentValue>(?:[^"@]*/)?v?\\d+\\.\\d+\\.\\d+)"',
+      ],
+      datasourceTemplate: 'github-tags',
+      versioningTemplate: 'regex:^(?<compatibility>.*\\/)?v?(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$',
+    },
+  ],
   packageRules: [
     {
       description: "skip pinning silverblue in justfile as it is used to track Fedora major version",
