@@ -55,9 +55,14 @@ go-work target="":
 develop mod="":
     #!/usr/bin/env bash
     set -e
-    _DAGGER_MODS="{{ mod }}"
-    if [[ -z "${_DAGGER_MODS}" ]]; then
-      mapfile -t _DAGGER_MODS < <(find . -type f -name dagger.json -print0 | xargs -0 dirname)
+    _DAGGER_MODS=()
+    if [[ -n "{{ mod }}" ]]; then
+      _DAGGER_MODS=("{{ mod }}")
+    else
+      shopt -s globstar nullglob
+      for _DAGGER_JSON in **/dagger.json; do
+        _DAGGER_MODS+=("$(dirname "${_DAGGER_JSON}")")
+      done
     fi
 
     for _DAGGER_MOD in "${_DAGGER_MODS[@]}"; do
@@ -86,6 +91,38 @@ develop mod="":
     done
     echo "=> dagger-develop: done"
 
+# run `dagger update` for all Dagger modules, or the given module
+update-dagger-dependencies mod="":
+    #!/usr/bin/env bash
+    set -euo pipefail
+    _DAGGER_MODS=()
+    if [[ -n "{{ mod }}" ]]; then
+      _DAGGER_MODS=("{{ mod }}")
+    else
+      shopt -s globstar nullglob
+      for _DAGGER_JSON in **/dagger.json; do
+        _DAGGER_MODS+=("$(dirname "${_DAGGER_JSON}")")
+      done
+    fi
+
+    for _DAGGER_MOD in "${_DAGGER_MODS[@]}"; do
+      echo "=> ${_DAGGER_MOD}: dagger update"
+
+      _DAGGER_CONFIG_JSON="$(dagger config --mod "${_DAGGER_MOD}" --silent --json)"
+      _DAGGER_DEPS_OUTPUT="$(jq -r '.dependencies // [] | .[].source' <<<"${_DAGGER_CONFIG_JSON}")"
+      _DAGGER_DEPS=()
+
+      if [[ -n "${_DAGGER_DEPS_OUTPUT}" ]]; then
+        mapfile -t _DAGGER_DEPS <<<"${_DAGGER_DEPS_OUTPUT}"
+      fi
+
+      if [[ "${#_DAGGER_DEPS[@]}" -eq 0 ]]; then
+        continue
+      fi
+
+      dagger update --mod "${_DAGGER_MOD}" "${_DAGGER_DEPS[@]}"
+    done
+
 # initialize a new Dagger module
 [no-exit-message]
 init module:
@@ -104,23 +141,43 @@ install target module:
   dagger install {{ module }}
   popd
 
+# update scottames/daggerverse deps; use vX.Y.Z for all modules or <module>/vX.Y.Z for one module
 update-scottames-daggerverse version mod="":
   #!/usr/bin/env bash
   set -euo pipefail
-  _DAGGER_MODS="{{ mod }}"
-  if [[ -z "${_DAGGER_MODS}" ]]; then
+  _DAGGER_MODS=()
+  _REQUESTED_MOD="{{ mod }}"
+  _TARGET_MODULE=""
+  _TARGET_VERSION="{{ version }}"
+  if [[ "${_TARGET_VERSION}" == */* ]]; then
+    _TARGET_MODULE="${_TARGET_VERSION%%/*}"
+    _TARGET_VERSION="${_TARGET_VERSION#*/}"
+  fi
+
+  if [[ -n "${_REQUESTED_MOD}" ]]; then
+    _DAGGER_MODS=("${_REQUESTED_MOD}")
+  else
     mapfile -t _DAGGER_MODS < <(find . -type f -name dagger.json -print0 | xargs -0 dirname)
   fi
 
   for _DAGGER_MOD in "${_DAGGER_MODS[@]}"; do
     echo "=> ${_DAGGER_MOD} @ {{ version }}"
     pushd "${_DAGGER_MOD}"
-    for mod_to_update in $( dagger config --silent --json \
-      | jq -r '.dependencies | .[].source' | grep 'scottames/daggerverse' \
-      | cut -d'@' -f1)
+    _DAGGER_CONFIG_JSON="$(dagger config --silent --json)"
+    mapfile -t _DAGGER_DEPS < <(
+      jq -r '.dependencies // [] | .[].source | select(contains("scottames/daggerverse")) | split("@")[0]' \
+        <<<"${_DAGGER_CONFIG_JSON}"
+    )
+
+    for mod_to_update in "${_DAGGER_DEPS[@]}"
     do
-      echo "=> update: ${mod_to_update}"
-      dagger install "${mod_to_update}@{{ version }}"
+      _DAGGERVERSE_MODULE="${mod_to_update##*/}"
+      if [[ -n "${_TARGET_MODULE}" && "${_DAGGERVERSE_MODULE}" != "${_TARGET_MODULE}" ]]; then
+        continue
+      fi
+
+      echo "=> update: ${mod_to_update}@${_DAGGERVERSE_MODULE}/${_TARGET_VERSION}"
+      dagger install "${mod_to_update}@${_DAGGERVERSE_MODULE}/${_TARGET_VERSION}"
     done
     popd
   done

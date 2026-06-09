@@ -48,6 +48,29 @@ jobs:
         uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - name: Dagger Version
+        id: dagger_version
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          version=""
+          while IFS= read -r line; do
+            case "${line}" in
+              '"aqua:dagger/dagger"'*)
+                version="${line#*=}"
+                version="${version//[[:space:]\"]/}"
+                break
+                ;;
+            esac
+          done < .mise/config.toml
+
+          if [[ -z "${version}" ]]; then
+            echo "::error ::Could not find aqua:dagger/dagger in .mise/config.toml"
+            exit 1
+          fi
+
+          echo "version=v${version}" >> "${GITHUB_OUTPUT}"
       - name: GitHub SHA Short
         id: sha_short
         run: echo "sha_short=${GITHUB_SHA::7}" >> "${GITHUB_OUTPUT}"
@@ -70,8 +93,7 @@ jobs:
           github.event_name == 'pull_request'
           && github.ref != 'refs/heads/main'
         with:
-          # renovate: datasource=github-releases depName=dagger/dagger
-          version: v0.21.3
+          version: ${{ steps.dagger_version.outputs.version }}
           verb: call
           module: atomic
           cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
@@ -92,8 +114,7 @@ jobs:
           github.event_name != 'pull_request'
           && github.ref == 'refs/heads/main'
         with:
-          # renovate: datasource=github-releases depName=dagger/dagger
-          version: v0.21.3
+          version: ${{ steps.dagger_version.outputs.version }}
           verb: call
           module: atomic
           cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
