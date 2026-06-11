@@ -46,6 +46,7 @@ var (
 		"https://copr.fedorainfracloud.org/coprs/scottames/mise/repo/fedora-FEDORA_MAJOR_VERSION/scottames-mise-fedora-FEDORA_MAJOR_VERSION.repo",
 		"https://copr.fedorainfracloud.org/coprs/scottames/vicinae/repo/fedora-FEDORA_MAJOR_VERSION/scottames-vicinae-fedora-FEDORA_MAJOR_VERSION.repo",
 		"https://copr.fedorainfracloud.org/coprs/scottames/voxtype/repo/fedora-FEDORA_MAJOR_VERSION/scottames-voxtype-fedora-FEDORA_MAJOR_VERSION.repo",
+		"https://copr.fedorainfracloud.org/coprs/scottames/zennotes/repo/fedora-FEDORA_MAJOR_VERSION/scottames-zennotes-fedora-FEDORA_MAJOR_VERSION.repo",
 		"https://copr.fedorainfracloud.org/coprs/tofik/nwg-shell/repo/fedora-FEDORA_MAJOR_VERSION/tofik-nwg-shell-fedora-FEDORA_MAJOR_VERSION.repo",
 	}
 	// for layering, primarily because these packages do not play well with opt
@@ -159,6 +160,7 @@ var (
 				"yubikey-manager",
 				"yubikey-manager-qt",
 				"ydotool",
+				"zennotes",
 
 				// Qemu / Virt-manager
 				"edk2-ovmf",
