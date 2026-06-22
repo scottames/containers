@@ -128,6 +128,8 @@ var (
 				"google-noto-fonts-common",
 				"google-roboto-fonts",
 				"fira-code-fonts",
+				"fuse",      // AppImage
+				"fuse-libs", //  .. required
 				"ibm-plex-mono-fonts",
 				"iotop",
 				"jetbrains-mono-fonts-all",
