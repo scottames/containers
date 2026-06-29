@@ -1,6 +1,34 @@
 package main
 
-import "testing"
+import (
+	"encoding/json"
+	"os"
+	"testing"
+)
+
+func TestDaggerConfigDoesNotInstallDistroboxHelpers(t *testing.T) {
+	t.Parallel()
+
+	data, err := os.ReadFile("dagger.json")
+	if err != nil {
+		t.Fatalf("read dagger.json: %v", err)
+	}
+
+	var config struct {
+		Dependencies []struct {
+			Name string `json:"name"`
+		} `json:"dependencies"`
+	}
+	if err := json.Unmarshal(data, &config); err != nil {
+		t.Fatalf("parse dagger.json: %v", err)
+	}
+
+	for _, dep := range config.Dependencies {
+		if dep.Name == "distrobox" {
+			t.Fatal("toolbox image should rely on distrobox create-time integration, not the daggerverse distrobox helper")
+		}
+	}
+}
 
 func TestHasCompatibleMesaFreeworldDrivers(t *testing.T) {
 	t.Parallel()

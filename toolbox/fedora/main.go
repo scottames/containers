@@ -179,10 +179,6 @@ func (ft *FedoraToolbox) Container(ctx context.Context) (*dagger.Container, erro
 		packages = append(packages, fmt.Sprintf(s, ft.ReleaseVersion))
 	}
 
-	db := dag.Distrobox()
-	dbheFile := db.HostExecFile()
-	hostSpawn := db.HostSpawnFile()
-
 	finalReposForBuild := replaceStringInSlice(
 		reposForBuild,
 		"FEDORA_MAJOR_VERSION",
@@ -202,13 +198,6 @@ func (ft *FedoraToolbox) Container(ctx context.Context) (*dagger.Container, erro
 
 	ctr := fedora.
 		Container(). // ✨ type becomes dagger.Container here!
-		WithFile(
-			"/usr/bin/distrobox-host-exec",
-			dbheFile,
-		).
-		WithFile("/usr/bin/host-spawn", hostSpawn,
-			dagger.ContainerWithFileOpts{Permissions: 0755, Owner: "root"},
-		).
 		WithExec([]string{"dnf", "clean", "all"})
 
 	return ctr, nil

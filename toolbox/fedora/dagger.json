@@ -11,11 +11,6 @@
       "pin": "0d7b7de707fe14a147f43e3528b2d941dd5547e0"
     },
     {
-      "name": "distrobox",
-      "source": "github.com/scottames/daggerverse/distrobox@distrobox/v0.0.7",
-      "pin": "0d7b7de707fe14a147f43e3528b2d941dd5547e0"
-    },
-    {
       "name": "fedora",
       "source": "github.com/scottames/daggerverse/fedora@fedora/v0.0.7",
       "pin": "0d7b7de707fe14a147f43e3528b2d941dd5547e0"
