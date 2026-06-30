@@ -40,6 +40,7 @@ var (
 		"glibc-locale-source",
 		"gnupg2",
 		"gnupg2-smime",
+		"gpgme-devel",
 		"hostname",
 		"iproute",
 		"iputils",
