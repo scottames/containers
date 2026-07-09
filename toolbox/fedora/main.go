@@ -50,6 +50,7 @@ var (
 		"libxcrypt-compat",
 		"lsof",
 		"lua",
+		"luarocks",
 		"man-db",
 		"man-pages",
 		"mise",
