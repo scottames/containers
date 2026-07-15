@@ -10,6 +10,7 @@ RELEASE_CHANNEL="${ONEPASSWORD_RELEASE_CHANNEL:-stable}" # stable, beta
 # Must be over 1000
 GID_ONEPASSWORD="${GID_ONEPASSWORD:-1500}"
 GID_ONEPASSWORDCLI="${GID_ONEPASSWORDCLI:-1600}"
+GID_ONEPASSWORDMCP="${GID_ONEPASSWORDMCP:-1700}"
 
 echo "=> Installing 1Password"
 
@@ -21,8 +22,8 @@ echo "=> Installing 1Password"
 # symbolic link /opt/1Password => /usr/lib/1Password upon
 # boot.
 
-# Prepare staging directory
-mkdir -p /var/opt
+# Prepare staging directories behind Atomic's /opt and /usr/local symlinks.
+mkdir -p /var/opt /var/usrlocal/bin
 
 cat <<EOF >/etc/yum.repos.d/1password.repo
 [1password]
@@ -43,8 +44,13 @@ rm /etc/yum.repos.d/1password.repo -f
 
 # hacky dance!
 mv /var/opt/1Password /usr/lib/1Password
-rm /usr/bin/1password
+rm -f /usr/bin/1password
 ln -s /opt/1Password/1password /usr/bin/1password
+MCP_PATH="/usr/lib/1Password/1password-mcp"
+if [[ -f "${MCP_PATH}" ]]; then
+    rm -f /var/usrlocal/bin/1password-mcp /usr/bin/1password-mcp
+    ln -s /opt/1Password/1password-mcp /usr/bin/1password-mcp
+fi
 
 #####
 # The following is a bastardization of "after-install.sh"
@@ -86,6 +92,11 @@ chmod g+s "${BROWSER_SUPPORT_PATH}"
 chgrp "${GID_ONEPASSWORDCLI}" /usr/bin/op
 chmod g+s /usr/bin/op
 
+if [[ -f "${MCP_PATH}" ]]; then
+    chgrp "${GID_ONEPASSWORDMCP}" "${MCP_PATH}"
+    chmod g+s "${MCP_PATH}"
+fi
+
 # Dynamically create the required groups via sysusers.d
 # and set the GID based on the files we just chgrp'd
 cat >/usr/lib/sysusers.d/onepassword.conf <<EOF
@@ -96,10 +107,17 @@ cat >/usr/lib/sysusers.d/onepassword-cli.conf <<EOF
 #Type Name            ID
 g     onepassword-cli ${GID_ONEPASSWORDCLI}
 EOF
+if [[ -f "${MCP_PATH}" ]]; then
+    cat >/usr/lib/sysusers.d/onepassword-mcp.conf <<EOF
+#Type Name            ID
+g     onepassword-mcp ${GID_ONEPASSWORDMCP}
+EOF
+fi
 
 # remove the sysusers.d entries created by onepassword RPMs.
 rm -f /usr/lib/sysusers.d/30-rpmostree-pkg-group-onepassword.conf
 rm -f /usr/lib/sysusers.d/30-rpmostree-pkg-group-onepassword-cli.conf
+rm -f /usr/lib/sysusers.d/30-rpmostree-pkg-group-onepassword-mcp.conf
 
 # Register path symlink
 # We do this via tmpfiles.d so that it is created by the live system.
