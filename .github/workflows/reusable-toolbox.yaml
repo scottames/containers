@@ -32,7 +32,7 @@ jobs:
       IMAGE_NAME: ${{ inputs.image_name }}
     steps:
       - name: Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - name: Dagger Version
         id: dagger_version
         shell: bash
@@ -61,7 +61,7 @@ jobs:
         run: echo "sha_short=${GITHUB_SHA::7}" >> "${GITHUB_OUTPUT}"
       - name: Docker Image Metadata From GitHub Repository
         # yamllint disable-line rule:line-length
-        uses: docker/metadata-action@80c7e94dd9b9319bd5eb7a0e0fe9291e23a2a2e9 # v6
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6
         id: generate_labels
         with:
           images: |
