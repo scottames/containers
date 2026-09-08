@@ -42,6 +42,7 @@ var (
 		"https://copr.fedorainfracloud.org/coprs/yalter/niri/repo/fedora-FEDORA_MAJOR_VERSION/yalter-niri-fedora-FEDORA_MAJOR_VERSION.repo",
 		"https://copr.fedorainfracloud.org/coprs/scottames/awww/repo/fedora-FEDORA_MAJOR_VERSION/scottames-awww-fedora-FEDORA_MAJOR_VERSION.repo",
 		"https://copr.fedorainfracloud.org/coprs/scottames/ghostty/repo/fedora-FEDORA_MAJOR_VERSION/scottames-ghostty-fedora-FEDORA_MAJOR_VERSION.repo",
+		"https://copr.fedorainfracloud.org/coprs/scottames/monstar/repo/fedora-FEDORA_MAJOR_VERSION/scottames-monstar-fedora-FEDORA_MAJOR_VERSION.repo",
 		"https://copr.fedorainfracloud.org/coprs/scottames/hypr/repo/fedora-FEDORA_MAJOR_VERSION/scottames-hypr-fedora-FEDORA_MAJOR_VERSION.repo",
 		"https://copr.fedorainfracloud.org/coprs/scottames/mise/repo/fedora-FEDORA_MAJOR_VERSION/scottames-mise-fedora-FEDORA_MAJOR_VERSION.repo",
 		"https://copr.fedorainfracloud.org/coprs/scottames/vicinae/repo/fedora-FEDORA_MAJOR_VERSION/scottames-vicinae-fedora-FEDORA_MAJOR_VERSION.repo",
@@ -76,6 +77,7 @@ var (
 				"gnome-keyring",
 				"grim",
 				"mako",
+				"monstar",  // from copr:scottames/monstar
 				"niri",     // from copr:yalter/niri
 				"nwg-look", // from copr:tofik/nwg-shell
 				"pavucontrol",
