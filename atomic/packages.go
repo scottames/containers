@@ -140,6 +140,7 @@ var (
 				"light",
 				"lm_sensors", // required by freon gnome-ext
 				"mise",       // from copr:scottames/mise
+				"mosh",
 				"mscore-fonts-all",
 				"netcat",
 				"NetworkManager-tui",

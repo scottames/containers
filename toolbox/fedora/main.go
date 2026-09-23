@@ -54,6 +54,7 @@ var (
 		"man-db",
 		"man-pages",
 		"mise",
+		"mosh",
 		"mtr",
 		"netcat",
 		"ncurses",
