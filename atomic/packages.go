@@ -103,6 +103,10 @@ var (
 			},
 		},
 		All: {
+			// mscore-fonts-all is unavailable in the Fedora 45 repositories.
+			"44": {
+				"mscore-fonts-all",
+			},
 			All: {
 				// Installed via script
 				// "1password",
@@ -141,7 +145,6 @@ var (
 				"lm_sensors", // required by freon gnome-ext
 				"mise",       // from copr:scottames/mise
 				"mosh",
-				"mscore-fonts-all",
 				"netcat",
 				"NetworkManager-tui",
 				"nodejs", // required for vicinae extensions

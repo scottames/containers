@@ -27,9 +27,9 @@ jobs:
       fail-fast: false
       matrix:
         release:
-          - version: 43
-            latest: false
           - version: 44
+            latest: false
+          - version: 45
             latest: true
     name: fedora-toolbox
     uses: ./.github/workflows/reusable-toolbox.yaml
