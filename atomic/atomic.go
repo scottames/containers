@@ -8,7 +8,7 @@ import (
 
 const (
 	// renovate: datasource=docker depName=quay.io/fedora-ostree-desktops/silverblue
-	latestFedoraVersion = "40"
+	latestFedoraVersion = "45"
 
 	description = "scottames' custom Fedora Silverblue native container image powered by Universal Blue."
 )

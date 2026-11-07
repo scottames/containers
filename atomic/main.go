@@ -45,7 +45,7 @@ func New(
 	suffix *string,
 	// Tag or major release version
 	// +optional
-	// +default="40"
+	// +default="45"
 	tag string,
 	// Labels to be applied to the generated container image in addition
 	// to the default labels

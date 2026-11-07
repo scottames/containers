@@ -33,7 +33,7 @@ dagger call -m atomic --help # print help for atomic Dagger module
    # change IMAGE and TAG as desired
    # https://github.com/scottames?tab=packages&repo_name=containers
    IMAGE=atomic-silverblue-main \
-   TAG=43 \
+   TAG=45 \
      rpm-ostree rebase \
        ostree-unverified-registry:ghcr.io/scottames/$IMAGE:$TAG
    ```
@@ -44,7 +44,7 @@ dagger call -m atomic --help # print help for atomic Dagger module
    # change IMAGE and TAG as desired
    # https://github.com/scottames?tab=packages&repo_name=containers
    IMAGE=atomic-silverblue-main \
-   TAG=43 \
+   TAG=45 \
    rpm-ostree rebase \
        ostree-image-signed:docker://ghcr.io/scottames/$IMAGE:$TAG
    ```

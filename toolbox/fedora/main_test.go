@@ -39,8 +39,8 @@ func TestHasCompatibleMesaFreeworldDrivers(t *testing.T) {
 		want           bool
 	}{
 		{
-			name:           "fedora 43 keeps freeworld mesa drivers",
-			releaseVersion: "43",
+			name:           "fedora 45 keeps freeworld mesa drivers",
+			releaseVersion: "45",
 			want:           true,
 		},
 		{
