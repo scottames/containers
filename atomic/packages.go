@@ -40,6 +40,7 @@ var (
 	reposForBuild = []string{ // will not be kept in final image
 		"https://pkgs.tailscale.com/stable/fedora/tailscale.repo",
 		"https://copr.fedorainfracloud.org/coprs/yalter/niri/repo/fedora-FEDORA_MAJOR_VERSION/yalter-niri-fedora-FEDORA_MAJOR_VERSION.repo",
+		"https://copr.fedorainfracloud.org/coprs/scottames/anomalyco/repo/fedora-FEDORA_MAJOR_VERSION/scottames-anomalyco-fedora-FEDORA_MAJOR_VERSION.repo",
 		"https://copr.fedorainfracloud.org/coprs/scottames/awww/repo/fedora-FEDORA_MAJOR_VERSION/scottames-awww-fedora-FEDORA_MAJOR_VERSION.repo",
 		"https://copr.fedorainfracloud.org/coprs/scottames/ghostty/repo/fedora-FEDORA_MAJOR_VERSION/scottames-ghostty-fedora-FEDORA_MAJOR_VERSION.repo",
 		"https://copr.fedorainfracloud.org/coprs/scottames/monstar/repo/fedora-FEDORA_MAJOR_VERSION/scottames-monstar-fedora-FEDORA_MAJOR_VERSION.repo",
@@ -136,6 +137,8 @@ var (
 				"fira-code-fonts",
 				"fuse",      // AppImage
 				"fuse-libs", //  .. required
+				"hex",       // from copr:scottames/anomalyco
+				"hokum",     // from copr:scottames/anomalyco
 				"ibm-plex-mono-fonts",
 				"iotop",
 				"jetbrains-mono-fonts-all",
