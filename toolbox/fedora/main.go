@@ -16,6 +16,7 @@ var (
 		"com.github.containers.toolbox": "true",
 	}
 	reposForBuild = []string{
+		"https://copr.fedorainfracloud.org/coprs/scottames/herdrdev/repo/fedora-FEDORA_MAJOR_VERSION/scottames-herdrdev-fedora-FEDORA_MAJOR_VERSION.repo",
 		"https://copr.fedorainfracloud.org/coprs/scottames/mise/repo/fedora-FEDORA_MAJOR_VERSION/scottames-mise-fedora-FEDORA_MAJOR_VERSION.repo",
 	}
 	packageUrlsWithReleaseVersion = []string{
@@ -41,6 +42,7 @@ var (
 		"gnupg2",
 		"gnupg2-smime",
 		"gpgme-devel",
+		"herdr-core", // from copr:scottames/herdrdev
 		"hostname",
 		"iproute",
 		"iputils",

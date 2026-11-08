@@ -43,6 +43,7 @@ var (
 		"https://copr.fedorainfracloud.org/coprs/scottames/anomalyco/repo/fedora-FEDORA_MAJOR_VERSION/scottames-anomalyco-fedora-FEDORA_MAJOR_VERSION.repo",
 		"https://copr.fedorainfracloud.org/coprs/scottames/awww/repo/fedora-FEDORA_MAJOR_VERSION/scottames-awww-fedora-FEDORA_MAJOR_VERSION.repo",
 		"https://copr.fedorainfracloud.org/coprs/scottames/ghostty/repo/fedora-FEDORA_MAJOR_VERSION/scottames-ghostty-fedora-FEDORA_MAJOR_VERSION.repo",
+		"https://copr.fedorainfracloud.org/coprs/scottames/herdrdev/repo/fedora-FEDORA_MAJOR_VERSION/scottames-herdrdev-fedora-FEDORA_MAJOR_VERSION.repo",
 		"https://copr.fedorainfracloud.org/coprs/scottames/monstar/repo/fedora-FEDORA_MAJOR_VERSION/scottames-monstar-fedora-FEDORA_MAJOR_VERSION.repo",
 		"https://copr.fedorainfracloud.org/coprs/scottames/hypr/repo/fedora-FEDORA_MAJOR_VERSION/scottames-hypr-fedora-FEDORA_MAJOR_VERSION.repo",
 		"https://copr.fedorainfracloud.org/coprs/scottames/mise/repo/fedora-FEDORA_MAJOR_VERSION/scottames-mise-fedora-FEDORA_MAJOR_VERSION.repo",
@@ -135,10 +136,12 @@ var (
 				"google-noto-fonts-common",
 				"google-roboto-fonts",
 				"fira-code-fonts",
-				"fuse",      // AppImage
-				"fuse-libs", //  .. required
-				"hex",       // from copr:scottames/anomalyco
-				"hokum",     // from copr:scottames/anomalyco
+				"fuse",       // AppImage
+				"fuse-libs",  //  .. required
+				"herdr-app",  // from copr:scottames/herdrdev
+				"herdr-core", // from copr:scottames/herdrdev
+				"hex",        // from copr:scottames/anomalyco
+				"hokum",      // from copr:scottames/anomalyco
 				"ibm-plex-mono-fonts",
 				"iotop",
 				"jetbrains-mono-fonts-all",
